@@ -1,0 +1,72 @@
+Task 13 — Final Official Educational Portfolio Refinement
+
+Review the attached 19-page portfolio PDF and implement a complete refinement of the portfolio export system.
+
+1. Cover page correction — Highest priority
+
+The current first page is NOT the previously approved official educational cover.
+
+* Restore the previously approved formal Ministry-of-Education-inspired cover design using the available approved reference.
+* Do not assume the current cover is approved.
+* If the exact approved design cannot be identified in the project or available references, request confirmation before replacing it with a new design.
+* Use a professional emerald, ivory, and restrained champagne-gold palette.
+* Display the portfolio title prominently in Arabic.
+* Organize the teacher’s name, school, educational administration, specialization, and academic year in a clear professional layout.
+* Do not invent missing information or use an unauthorized official logo.
+* Ensure full-page A4 portrait coverage with proper print-safe margins.
+
+2. Curriculum vitae and educational objectives
+
+* Reorganize the CV according to the previously supplied reference.
+* Include personal details, academic qualifications, professional experience, skills, training courses, and professional mission when available.
+* Include the previously supplied Saudi educational objectives in a professionally structured page.
+* Do not fabricate unsupported teacher details.
+
+3. Evidence layout controls
+
+Provide four selectable layout modes in the portfolio interface:
+
+* 1 evidence item per page.
+* 2 evidence items per page, vertically arranged.
+* 3 evidence items per page, balanced vertically.
+* 4 evidence items per page, arranged in a 2×2 grid.
+
+The teacher must be able to select the preferred layout before exporting.
+
+Include a live A4 preview reflecting the selected layout and automatically manage page breaks when content cannot fit safely.
+
+4. Evidence presentation
+
+* Remove original filenames, such as IMG 0105, IMG 0109, UUIDs, and technical attachment identifiers, from the exported PDF.
+* Display only the meaningful teacher-provided evidence description or caption when available.
+* Place captions directly beneath their corresponding images.
+* Preserve original image proportions.
+* Never crop, stretch, or distort evidence.
+* Maximize image visibility within the selected layout.
+* Avoid unnecessary whitespace.
+* Maintain correct RTL alignment.
+
+5. Global portfolio improvements
+
+* Apply one consistent formal educational design to the cover, CV, introduction, objectives, summary, index, standards, evidence, and closing page.
+* Improve typography, alignment, spacing, and visual hierarchy.
+* Keep all generated pages in portrait A4 format.
+* Preserve original PDF attachments without changing their contents, rotation, dimensions, or ordering.
+* Recalculate index references and page numbering accurately.
+* Prevent black pages, blank pages, missing images, duplicated content, and clipped Arabic text.
+* Keep teacher-selected completion status separate from evidence coverage.
+
+6. Verification and delivery
+
+* Generate a representative synthetic portfolio PDF using all four evidence layout modes.
+* Visually inspect every generated page.
+* Test Arabic text, long descriptions, mixed image/PDF attachments, and pagination.
+* Run automated tests, TypeScript checks, and the production build.
+* Provide the final PDF sample for approval before deployment.
+* Clearly report any limitations or unresolved issues.
+
+Safety constraints
+
+Do not modify production teacher data, authentication, Supabase RLS policies, subscriptions, payments, or existing uploaded evidence.
+
+Do not deploy until the final sample has been reviewed and explicitly approved.

@@ -1,0 +1,36 @@
+Task 11 — Royal Luxury Standard Cover Page Design
+
+Update the PDF layout so that every professional standard has its own beautifully designed, full A4 portrait page.
+
+Use the attached reference screenshot as the primary visual inspiration for standard pages, but adapt its colors to the approved Royal Luxury identity.
+
+Design specifications:
+
+1. Each standard must have exactly one dedicated A4 portrait page.
+2. Display a very large, elegant, semi-transparent standard number (01–11) on the upper side of the page, similar to the reference screenshot.
+3. Position the standard title prominently in the middle section, using elegant, readable Arabic RTL typography.
+4. Place the standard description immediately beneath the title.
+5. Display the standard’s existing indicators in a clean, sophisticated section below the description.
+6. Add subtle Islamic geometric patterns and elegant decorative elements in the background.
+7. Use an edge-to-edge ivory background, deep emerald green typography, champagne-gold details, and refined royal borders.
+8. Include an elegant bottom decorative wave or footer inspired by the reference, adapted to the emerald-and-gold palette.
+9. Ensure the composition feels balanced and luxurious, without excessive blank space.
+10. Use only the existing standard names, descriptions, indicators, and teacher data. Do not invent or rewrite information.
+11. All 11 standard pages must share the same design system, with their respective numbers and content.
+12. Immediately after each standard page, generate its associated evidence pages, if any.
+13. Evidence pages must follow the previously approved Task 11 pagination requirements.
+14. Never combine multiple standards on the same page.
+
+Required PDF sequence:
+
+Standard 01 cover → Standard 01 evidence → Standard 02 cover → Standard 02 evidence → continue sequentially through Standard 11.
+
+Verification:
+
+Generate a complete synthetic PDF demonstrating the final design for all 11 standards and their evidence pages.
+
+Visually inspect the standard cover pages and confirm that the layout matches the reference image in overall composition, typography hierarchy, and visual elegance.
+
+Preserve existing functionality and security settings. Do not deploy or modify production data.
+
+Provide the final PDF for visual approval.

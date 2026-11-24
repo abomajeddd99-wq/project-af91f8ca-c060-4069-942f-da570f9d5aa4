@@ -1,0 +1,42 @@
+Task #7 — Professional Portfolio PDF Redesign
+
+Redesign the exported PDF for the existing Arabic teacher portfolio platform “إنجازي للمعلم” to create a premium, professional, print-ready portfolio.
+
+Main requirements
+
+1. Preserve the existing Arabic RTL interface, all 11 standards, evidence management, authentication, and current application functionality.
+2. Create a sophisticated A4 PDF design using the existing teal brand identity, white backgrounds, and subtle gold accents.
+3. Improve the cover page with the teacher’s name, school, academic year (when available), and platform branding.
+4. Add a professional teacher information page using existing profile fields only.
+5. Add a brief portfolio introduction and objectives page with appropriate editable or clearly identified generic text.
+6. Redesign the achievement summary with elegant cards, clear statistics, and a visual distinction between manually selected completion status and evidence coverage.
+7. Create a clean standards index with accurate page numbers based on the final generated PDF.
+8. Redesign each standard section with consistent headings, standard numbers, descriptions, indicators, completion status, and evidence counts.
+9. Eliminate unnecessary repeated headings and improve whitespace, typography, margins, and visual hierarchy.
+10. Design professional evidence information pages showing title, date, description, related standard, and attachment metadata.
+11. Preserve full-resolution evidence where feasible. Fit images proportionally without cropping important content, and include all pages of attached PDF evidence in the correct order.
+12. Add consistent headers, footers, and page numbering across generated portfolio pages, without altering the original content of uploaded evidence.
+13. Include a tasteful closing page.
+14. Preserve the existing option to include or exclude standards without evidence.
+15. Do not invent teacher details, evidence, completion states, or official standard descriptions. Keep the existing standards data unchanged.
+
+Technical and safety requirements
+
+* Reuse the existing working PDF export architecture.
+* Preserve the recent fix for blank PDF pages.
+* Ensure correct Arabic text rendering, RTL alignment, and stable fonts.
+* Avoid blank pages, clipped content, overlapping elements, and unnecessary page breaks.
+* Ensure PDF export works with multiple images, multipage PDFs, and large portfolios.
+* Add regression tests for page ordering, content visibility, image sizing, Arabic rendering, and page numbering.
+* Test the final exported PDF visually with synthetic Arabic data.
+* Run the existing tests, TypeScript checks, and production build.
+* Do not modify Supabase RLS policies, subscriptions, payment settings, production data, or real teacher files.
+* Do not deploy.
+
+Delivery
+
+Provide a sample generated PDF using synthetic Arabic teacher data so I can review the visual design.
+
+Explain which files were modified, which tests passed, and any remaining limitations.
+
+Important: Prioritize an elegant, distinctive, professional design rather than merely changing colors or adding decorative elements. Do not remove or break any existing functionality.

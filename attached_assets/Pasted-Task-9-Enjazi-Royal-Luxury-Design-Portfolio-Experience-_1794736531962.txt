@@ -1,0 +1,362 @@
+Task 9 — Enjazi Royal Luxury Design & Portfolio Experience Refinement
+
+Project
+
+Existing Arabic teacher portfolio platform: إنجازي للمعلم — enjazi.app
+
+Primary Objective
+
+Transform the existing Enjazi teacher portfolio experience into a premium, elegant, professional Arabic educational platform, with particular emphasis on the exported A4 PDF portfolio.
+
+The desired design direction is Royal Emerald Luxury: sophisticated, restrained, distinctive, and suitable for formal educational documentation in Saudi Arabia.
+
+This task builds upon the completed Task 7 and Task 8 PDF redesigns. Preserve their successful implementations and improve them incrementally.
+
+Do not rebuild the application from scratch. Do not deploy.
+
+⸻
+
+1. Design Identity
+
+Use a consistent visual design system:
+
+* Deep emerald: #07594F
+* Champagne gold: #C5A15B
+* Warm ivory: #F7F3EA
+* White: #FFFFFF
+* Charcoal: #202B2A
+
+Use elegant Arabic typography with correct RTL rendering.
+
+Apply subtle Islamic geometric patterns, fine gold rules, and refined decorative elements only where they improve the design.
+
+Avoid excessive decoration, oversized shapes, gradients, and unnecessary empty space.
+
+Maintain the existing Enjazi brand identity and recognizable user experience.
+
+2. Premium PDF Cover
+
+Redesign the portfolio cover to create a distinctive, prestigious first impression.
+
+Include:
+
+* Platform branding.
+* Portfolio title.
+* Teacher name.
+* School name.
+* Subject or specialization, if available.
+* Academic year, if available.
+* Education administration, if available.
+
+Use only existing profile information.
+
+Allow existing cover customization options to continue working.
+
+Create a strong typographic hierarchy, balanced geometric decoration, and an elegant teacher-information panel.
+
+Keep the cover visually impressive but appropriate for official educational use.
+
+3. Teacher Profile and Professional Information
+
+Improve the teacher information page with a structured, professional layout.
+
+Organize existing information into clear sections:
+
+* Personal and professional information.
+* Qualifications.
+* Professional experience.
+* Skills.
+* Training courses.
+* Professional vision or message, where available.
+
+Do not invent missing information.
+
+Avoid displaying large groups of empty fields. Where the existing product intentionally provides blank printable fields, preserve that behavior.
+
+4. Portfolio Introduction and Objectives
+
+Create an elegant introduction and objectives section.
+
+Use concise, professional Arabic text appropriate for a teacher portfolio.
+
+Make generic introductory text clearly identifiable and editable where supported.
+
+Do not present generic statements as verified personal achievements.
+
+Preserve existing official educational text and sources without modification.
+
+5. Achievement Summary
+
+Redesign the achievement summary using elegant statistic cards and compact charts.
+
+Display:
+
+* Total evidence count.
+* Number of standards containing evidence.
+* Number of standards without evidence.
+* Evidence distribution across standards.
+* Existing manually selected completion statuses, if available.
+
+Clearly distinguish:
+
+1. Evidence coverage.
+2. Manually selected completion status.
+
+Never automatically treat the existence of evidence as proof that a standard is completed.
+
+Preserve existing calculations and business logic.
+
+6. Professional Standards Index
+
+Create a clean, compact, professional index.
+
+Requirements:
+
+* Display the existing standards and their exact stored names.
+* Show accurate page numbers.
+* Calculate page references from the final generated PDF.
+* Support standards with multiple pages.
+* Preserve the option to include or exclude standards without evidence.
+* Avoid unnecessary index pages.
+
+Do not modify official standard titles, descriptions, or indicators.
+
+7. Standards Section Redesign
+
+This is a major visual priority.
+
+The current standard introduction pages sometimes contain excessive empty space.
+
+Redesign each standard section with:
+
+* Elegant standard number.
+* Standard title.
+* Existing official description.
+* Indicators, where available.
+* Evidence count.
+* Completion status, where available.
+* Clear relationship to the following evidence.
+
+Use compact, sophisticated section headers rather than oversized decorative pages when the content is short.
+
+Maintain visual consistency across all standards.
+
+Avoid creating a separate full page for a standard when a compact introduction can achieve a better result, unless a section divider is intentionally selected.
+
+8. Evidence Presentation
+
+Make evidence pages professional, organized, and visually balanced.
+
+Include existing evidence metadata:
+
+* Evidence title.
+* Related standard.
+* Evidence date, if available.
+* Description, if available.
+* Attachment type.
+* Attachment information, where available.
+
+Use the following rules:
+
+* Preserve image aspect ratios.
+* Never crop important evidence content.
+* Keep images sharp and readable.
+* Use available page space efficiently.
+* Avoid placing a small image at the top of an otherwise empty page when a better layout is possible.
+* Allow multiple compact evidence items on one page when appropriate and readable.
+* Give full-page documents sufficient space.
+* Preserve every page of uploaded PDF attachments.
+* Maintain attachment page order.
+* Never modify the original evidence content.
+
+For portrait and landscape attachments, apply appropriate proportional fitting.
+
+Do not stretch, distort, or unnecessarily recompress evidence.
+
+9. Headers, Footers, and Page Numbers
+
+Create consistent and discreet page furniture for generated portfolio pages.
+
+Include:
+
+* Small Enjazi branding.
+* Section identification.
+* Page number.
+* Subtle decorative elements.
+
+Do not overlay headers, footers, watermarks, or page numbers onto the original content of uploaded PDF evidence.
+
+Ensure index references remain correct after all pages have been assembled.
+
+10. Closing Page
+
+Create a sophisticated closing page featuring:
+
+* A concise professional closing statement.
+* Teacher name, when available.
+* Optional existing signature fields.
+* Balanced emerald and champagne-gold decoration.
+
+Avoid inventing signatures, approvals, or official certifications.
+
+11. Portfolio Preview Experience
+
+Improve the existing portfolio preview interface without changing its underlying functionality.
+
+Provide:
+
+* Clear A4 page previews.
+* Better page spacing and visual presentation.
+* Consistent loading states.
+* Clear export and print controls.
+* Useful error messages.
+* Responsive layout for tablets, desktop, and mobile.
+
+Preserve existing subscription and access restrictions exactly as implemented.
+
+Do not introduce new paywalls or change plan entitlements.
+
+12. Cover Designer
+
+Refine the existing cover-design interface.
+
+Improve:
+
+* Template selection.
+* Color selection.
+* Title selection.
+* Live preview.
+* Selected-state clarity.
+* Tablet usability.
+
+Preserve existing templates and user selections.
+
+Do not remove existing customization options.
+
+13. Dashboard and Navigation
+
+Apply a restrained visual refinement to the existing dashboard and navigation.
+
+Improve spacing, typography, card alignment, and information hierarchy.
+
+Keep all current navigation items and functionality:
+
+* Dashboard.
+* Evidence management.
+* Standards.
+* Reports and plans.
+* Portfolio.
+* Cover designer.
+* Teacher tools.
+
+Do not redesign unrelated workflows or change business logic.
+
+14. PDF Technical Quality
+
+Reuse the existing PDF export architecture.
+
+Preserve the successful blank-page fix from previous tasks.
+
+Ensure:
+
+* Correct Arabic shaping.
+* Correct RTL direction.
+* Stable Arabic fonts.
+* A4 print-ready output.
+* No clipped content.
+* No overlapping elements.
+* No accidental blank pages.
+* Accurate page numbering.
+* Correct attachment ordering.
+* Reliable export of large portfolios.
+
+Investigate whether generated Arabic text can become selectable and searchable without compromising visual quality.
+
+If this requires a risky architectural rewrite, do not implement it in this task. Document the limitation and propose a separate safe improvement.
+
+15. Testing and Verification
+
+Run:
+
+* Existing automated tests.
+* PDF export regression tests.
+* Arabic rendering tests.
+* Multipage attachment tests.
+* Image fitting tests.
+* Page numbering tests.
+* TypeScript checks.
+* Production build.
+
+Test with synthetic Arabic teacher data.
+
+Generate a complete sample PDF containing:
+
+* Cover.
+* Teacher information.
+* Introduction and objectives.
+* Standards index.
+* Achievement summary.
+* At least two standards.
+* Multiple images.
+* A multipage PDF attachment.
+* Closing page.
+
+Visually inspect the final PDF page by page.
+
+Check for excessive whitespace, poor alignment, unreadable text, incorrect page numbers, and missing evidence.
+
+16. Safety and Preservation
+
+Do not modify:
+
+* Supabase RLS policies.
+* Authentication.
+* Subscriptions.
+* Payments.
+* Production database records.
+* Real teacher files.
+* Existing official standards data.
+* Existing evidence associations.
+
+Do not remove any existing feature.
+
+Do not deploy or publish.
+
+Keep all changes limited to the development environment.
+
+17. Deliverables
+
+Provide:
+
+1. A downloadable synthetic sample PDF.
+2. A summary of the visual improvements.
+3. The files modified.
+4. Tests performed and their results.
+5. Any remaining limitations.
+6. Confirmation that no production deployment occurred.
+
+18. Execution Strategy
+
+Before coding:
+
+1. Inspect the current implementation.
+2. Identify the existing PDF generation architecture.
+3. Review the previous Task 7 and Task 8 changes.
+4. Identify the smallest safe set of modifications.
+5. Preserve all working functionality.
+
+Implement the PDF visual improvements first.
+
+Then refine the preview and cover designer.
+
+Finally, apply only minimal dashboard polish.
+
+Do not claim successful verification without running the corresponding tests.
+
+Final quality target:
+
+The result should resemble a premium professionally designed Arabic educational portfolio, not a generic PDF template or a decorated web-page printout.
+
+Prioritize visual hierarchy, readability, editorial balance, consistent typography, and evidence presentation.
+
+Do not deploy. Wait for my approval after presenting the sample PDF and verification results.

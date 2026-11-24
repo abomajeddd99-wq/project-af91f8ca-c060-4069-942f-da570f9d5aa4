@@ -1,0 +1,74 @@
+Task #8 — Luxury Executive Portfolio PDF Refinement
+
+Refine the existing 19-page Arabic teacher portfolio PDF in the “إنجازي للمعلم” platform into a distinctive, luxurious, executive-quality A4 portfolio.
+
+Design direction
+
+Create a premium Arabic editorial design that feels like a professionally art-directed institutional portfolio.
+
+Use:
+
+* Deep teal: #164F4B
+* Champagne gold: #C5A46D
+* Warm ivory: #FAF8F3
+* White: #FFFFFF
+* Charcoal: #283635
+
+Use elegant Arabic typography, generous but balanced spacing, fine gold dividers, refined cards, and consistent visual hierarchy.
+
+Avoid excessive decoration, heavy borders, oversized empty spaces, and tiny text.
+
+Required improvements
+
+1. Luxury cover: Create a distinctive cover with premium typography, refined geometric accents, platform branding, teacher name, school, and academic year when available. Never invent missing information.
+2. Teacher profile: Use an elegant two-column RTL information layout with existing profile fields only.
+3. Introduction: Present the introduction and objectives in a polished editorial composition with readable text and subtle gold details.
+4. Achievement dashboard: Create refined statistical cards. Clearly distinguish manually selected completion from actual evidence coverage. Preserve all calculation logic.
+5. Standards index: Design a premium table of contents with elegant numbering, separators, and accurate final PDF page references.
+6. Standards pages: Improve the visual composition of all 11 standards. Use consistent section headings, numbered labels, indicator cards, completion-status elements, evidence counts, and clear descriptions. Avoid large unnecessary empty areas, but never add fabricated content simply to fill space.
+7. Evidence pages: Create elegant evidence metadata layouts with clear titles, dates, descriptions when available, attachment details, and related standards.
+8. Evidence attachments: Preserve uploaded evidence exactly. Display images proportionally without cropping important content, and include every page of attached PDFs in the correct order.
+9. Typography: Use reliable Arabic fonts with proper RTL shaping. Improve readability and print sizing. Prevent clipping, broken Arabic characters, and overlapping elements.
+10. Page structure: Use consistent A4 margins, headers, footers, page numbering, and subtle decorative elements on generated portfolio pages. Do not alter uploaded evidence content.
+11. Closing page: Create a tasteful, premium closing page consistent with the cover.
+12. Print quality: Ensure high-resolution rendering, balanced contrast, professional spacing, and a polished appearance in both digital viewing and printing.
+
+Important architectural constraints
+
+* Preserve the existing working PDF export architecture.
+* Preserve the previously fixed blank-page rendering issue.
+* Do not change the 11 standards, their descriptions, indicators, weights, or completion calculations.
+* Preserve Arabic RTL, authentication, evidence management, and all application functionality.
+* Preserve the option to include or exclude standards without evidence.
+* Do not modify Supabase policies, payments, subscriptions, production data, or uploaded teacher files.
+* Do not deploy.
+
+Quality assurance
+
+Use synthetic Arabic teacher data to generate and visually inspect the complete PDF.
+
+Verify:
+
+* Every generated page has visible content.
+* Arabic text renders correctly.
+* Images are not distorted or cropped.
+* Multipage evidence PDFs retain all pages.
+* Standards and evidence appear in the correct order.
+* Index page numbers match the final PDF.
+* Headers and footers are consistent.
+* The PDF has no unintended blank pages or overlapping elements.
+
+Run all existing tests, TypeScript checks, and the production build.
+
+Deliverables
+
+1. Provide a downloadable sample PDF generated using synthetic Arabic data.
+2. Explain which files were modified.
+3. Report test results and any remaining limitations.
+4. Do not deploy without my explicit approval.
+
+Final priority
+
+The result must feel genuinely luxurious, distinctive, and professionally designed—not merely recolored.
+
+Preserve the existing functionality and prioritize visual excellence, Arabic readability, and print-ready quality.

@@ -1,0 +1,310 @@
+Task 12 — Final Royal Luxury Portfolio Redesign & PDF Quality Assurance
+
+Project: إنجازي للمعلم (Enjazi Teacher Portfolio)
+
+Redesign and refine the existing Arabic teacher portfolio PDF export to achieve a distinctive, premium, royal-quality A4 portfolio.
+
+Use the latest uploaded portfolio PDF as the primary reference for identifying layout defects, and the previously approved evidence screenshot as the reference for image sizing and placement.
+
+This is a refinement of the existing implementation, not a complete rebuild.
+
+1. Royal Visual Identity
+
+Apply a consistent, sophisticated design throughout the portfolio.
+
+* Deep emerald green: #07584F
+* Champagne gold: #C5A46D
+* Warm ivory: #F8F5EC
+* Charcoal: #252A28
+* White for selected content areas.
+
+Requirements:
+
+* Full-page A4 portrait backgrounds.
+* Elegant Arabic RTL typography.
+* Subtle Islamic geometric patterns.
+* Refined borders, separators, and page numbering.
+* Consistent headers and footers.
+* No excessive decorative elements.
+* Maintain generous but purposeful whitespace.
+
+The final result should resemble a premium professionally published educational portfolio.
+
+2. Premium Cover Redesign
+
+Improve the current cover substantially.
+
+Include:
+
+* Enjazi branding.
+* Main title: ملف الإنجاز الوظيفي
+* Teacher’s name.
+* School.
+* Academic year, if available.
+* Existing professional information only.
+
+Create a distinctive royal composition with emerald and champagne-gold elements, balanced typography, and a sophisticated geometric background.
+
+Avoid oversized empty areas.
+
+Do not invent teacher information.
+
+3. Teacher Profile and Introduction
+
+Improve the teacher profile page using existing fields only.
+
+Use refined information cards with clear Arabic labels.
+
+Keep the introduction and portfolio objectives concise, professional, and editable where supported.
+
+Do not create fictional qualifications, achievements, or training records.
+
+4. Achievement Summary and Index
+
+Redesign the achievement summary using elegant statistical cards.
+
+Clearly distinguish:
+
+* Teacher-selected completion status.
+* Evidence coverage.
+* Total evidence items.
+* Standards with evidence.
+
+Never confuse manually selected completion with calculated evidence coverage.
+
+Improve the standards index with readable titles, correct standard numbers, and accurate final PDF page references.
+
+5. Mandatory Standard and Evidence Ordering
+
+This is a critical requirement.
+
+Every standard must appear in the following sequence:
+
+1. A dedicated page introducing the standard.
+2. Its evidence pages immediately afterward, when evidence exists.
+3. The next standard begins only after all evidence belonging to the previous standard has been displayed.
+
+Never place evidence before its corresponding standard.
+
+Never mix evidence from different standards on the same page.
+
+Preserve all existing standards, descriptions, indicators, and completion statuses.
+
+Do not replace the existing standards data.
+
+6. Royal Standard Pages
+
+Each standard must have its own professionally designed A4 portrait page.
+
+Include:
+
+* Large, elegant standard number.
+* Standard title.
+* Existing official description, if available.
+* Existing indicators.
+* Completion status.
+* Evidence count.
+
+Improve the visual balance of these pages.
+
+Avoid leaving the majority of each page visually empty.
+
+Use elegant typography, restrained geometric details, and a refined emerald-and-gold composition.
+
+Do not add artificial content simply to fill space.
+
+7. Evidence Image Layout — Mandatory
+
+Use the previously approved screenshot as the primary visual reference.
+
+One evidence image
+
+When a standard has one image evidence item:
+
+* Display it in the upper portion of the A4 portrait page.
+* Target approximately one-third of the page height.
+* Preserve its aspect ratio.
+* Center it horizontally.
+* Add a subtle gold border.
+* Place its title immediately beneath the image.
+* Add a short, clear Arabic description directly beneath the title.
+* Display only relevant existing metadata.
+
+Two evidence images
+
+When a standard has two suitable image evidence items:
+
+* Place both on the same A4 portrait page.
+* Arrange them vertically.
+* Give each image its own clearly separated presentation area.
+* Place each title and description directly beneath its corresponding image.
+* Maintain readable image dimensions and balanced spacing.
+
+Three or more images
+
+Automatically distribute images across multiple pages.
+
+Use a maximum of two image evidence items per page.
+
+Preserve the original evidence order.
+
+If two images cannot fit comfortably without excessive shrinking, use separate pages.
+
+Image quality
+
+* Never crop important content.
+* Never stretch or distort images.
+* Preserve original resolution where feasible.
+* Use proportional image scaling.
+* Avoid unnecessary compression.
+* Never allow images or captions to overlap.
+
+Do not create a nearly empty page when two suitable images could fit together.
+
+8. Evidence Titles and Descriptions
+
+Evidence information must be concise and visually organized.
+
+Display:
+
+* Evidence title.
+* Brief description, if available.
+* Related standard.
+* Date, if available and useful.
+
+Do not use long filenames as prominent evidence titles when a proper title exists.
+
+If the evidence has no description, do not invent one.
+
+Use a clear Arabic typographic hierarchy.
+
+9. PDF Attachment Preservation
+
+Preserve every page of uploaded PDF evidence.
+
+Requirements:
+
+* Original page order.
+* Original page content.
+* Original page orientation and dimensions where required.
+* No cropping.
+* No missing pages.
+* No blank replacement pages.
+
+Do not overlay decorative backgrounds, headers, or footers onto original uploaded PDF pages.
+
+Keep attachment metadata on generated evidence information pages where necessary.
+
+10. Fix Black and Blank Pages
+
+The latest supplied portfolio PDF shows a completely black page at page 19.
+
+Investigate the root cause.
+
+Determine whether it is caused by:
+
+* PDF rendering.
+* Canvas capture.
+* Image decoding.
+* PDF page insertion.
+* Background rendering.
+* Memory or asynchronous loading.
+
+Fix the underlying issue without removing evidence or hiding pages.
+
+Preserve the previous blank-page rendering fixes.
+
+Add automated regression tests for black and blank pages.
+
+Do not simply delete suspicious pages.
+
+11. Consistent Page Numbering
+
+Implement reliable page numbering.
+
+Ensure:
+
+* The index matches the final PDF.
+* Every generated page has the correct page number.
+* Standards and evidence remain in the correct sequence.
+* Original attachment pages remain unmodified.
+* Total page counts are accurate.
+
+12. Premium Closing Page
+
+Redesign the closing page to match the royal cover.
+
+Use a concise professional closing statement.
+
+Include signature fields only when appropriate and supported by the existing design.
+
+Maintain a refined, balanced composition.
+
+13. Technical Preservation
+
+Preserve all existing application functionality, including:
+
+* Arabic RTL interface.
+* Authentication.
+* Existing standards and evidence management.
+* Teacher profiles.
+* Completion calculations.
+* Existing PDF export architecture.
+* Option to include or exclude standards without evidence.
+* Existing subscription and payment behavior.
+
+Do not modify Supabase RLS, authentication, subscriptions, payment settings, production records, or real teacher files.
+
+Do not deploy.
+
+14. Testing and Visual Verification
+
+Generate a complete synthetic Arabic portfolio PDF.
+
+Test at least:
+
+1. A standard with one image evidence item.
+2. A standard with two image evidence items.
+3. A standard with three image evidence items.
+4. A standard with four image evidence items.
+5. A standard without evidence.
+6. A standard containing a multipage PDF attachment.
+7. Mixed image and PDF evidence.
+8. Long Arabic titles and descriptions.
+9. Correct page numbering and index references.
+10. No black, blank, clipped, or overlapping pages.
+
+Visually inspect every page of the generated sample.
+
+Run:
+
+* Existing automated tests.
+* TypeScript checks.
+* Production build.
+* PDF export regression tests.
+
+15. Required Delivery
+
+Provide:
+
+1. The final synthetic Arabic portfolio PDF as a downloadable attachment.
+2. A concise summary of visual improvements.
+3. A list of modified files.
+4. Test results.
+5. Confirmation that evidence ordering and image sizing meet the approved requirements.
+6. Confirmation that the black-page issue has been investigated and resolved, or a clear explanation of any remaining cause.
+7. Any remaining limitations.
+
+Do not deploy the application.
+
+Final Acceptance Criteria
+
+The PDF must be visually luxurious, professionally organized, fully Arabic RTL, and print-ready.
+
+Every standard must have its own dedicated page, followed immediately by its evidence.
+
+Evidence images must appear at approximately one-third-page height when displayed individually, or two per page when they fit comfortably.
+
+The final PDF must not contain unexplained black pages, missing evidence, overlapping content, or incorrect index references.
+
+Prioritize actual visual quality and usability over superficial color changes.

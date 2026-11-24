@@ -1,0 +1,4 @@
+- [Production and billing safety](production-and-billing-safety.md) — ask for explicit approval before changing production data, subscription settings, or payment features.
+- [Browser-based PDF sample generation](pdf-sample-generation.md) — use the running Vite app for full exporter samples; isolated roots can exhaust watchers or bypass dependency optimization.
+- [Approved evidence layout priorities](evidence-layout-priorities.md) — honor teacher-selected maxima without sacrificing readability; portrait rules never apply to original PDF attachments.
+- [Generated PDF capture safety](pdf-capture-safety.md) — valid image bytes can still contain a collapsed black capture; validate generated output without altering original attachments.

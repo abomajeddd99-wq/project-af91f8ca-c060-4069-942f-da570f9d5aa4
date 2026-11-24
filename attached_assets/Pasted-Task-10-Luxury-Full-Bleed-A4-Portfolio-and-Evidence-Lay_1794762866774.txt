@@ -1,0 +1,59 @@
+Task 10 — Luxury Full-Bleed A4 Portfolio and Evidence Layout Refinement
+
+Refine the existing Arabic teacher portfolio PDF export based on the latest user-provided PDF and visual reference screenshots.
+
+Primary design requirements
+
+1. Redesign all generated portfolio pages to use the entire A4 canvas (210 × 297 mm), with full-bleed emerald, ivory, and champagne-gold design elements. Avoid the appearance of a smaller document surrounded by large white margins.
+2. Maintain a premium, formal, sophisticated Arabic RTL design, with consistent typography, elegant geometric details, and balanced visual hierarchy.
+3. Use the available page area more effectively. Eliminate excessive blank space and unnecessary standalone pages wherever practical.
+
+Evidence layout — highest priority
+
+4. Redesign evidence pages to match the provided visual reference: display the actual evidence image prominently, centered, and at a large readable size.
+5. Preserve the original aspect ratio of each evidence image. Never crop, stretch, distort, or hide important content.
+6. Place a compact, professionally formatted evidence information block immediately beneath the image on the same page whenever feasible.
+7. The evidence information block should display:
+    * Evidence title
+    * Short description, when available
+    * Related professional standard
+    * Optional date, only when available
+8. Use existing evidence data only. Do not invent descriptions, titles, dates, or standards.
+9. Remove unnecessary standalone evidence metadata pages when the metadata can fit directly below the image.
+10. Give the evidence image visual priority over decorative elements and metadata.
+11. For landscape images, maximize their readable width while preserving proportions.
+12. For portrait images, maximize their readable height while reserving sufficient space for the compact information block.
+13. If an image and its information block cannot fit legibly on the same A4 page, use a clean continuation layout rather than shrinking the evidence excessively.
+14. Preserve all pages of uploaded PDF attachments in their original order, orientation, dimensions, and content. Do not overlay or modify original PDF attachment pages. Where needed, place a separate compact metadata page before the original attachment, without unnecessary duplication.
+
+Portfolio refinement
+
+15. Improve the cover, profile, introduction, objectives, achievement summary, standards index, standard sections, and closing page.
+16. Reduce large empty areas through better typography, spacing, and balanced page composition. Do not add invented content merely to fill space.
+17. Keep the design visually consistent across all generated A4 pages.
+18. Ensure all standard headings, indicators, completion states, evidence counts, and page numbers remain accurate.
+19. Maintain the existing distinction between manually selected completion status and evidence coverage.
+20. Preserve the existing option to include or exclude standards without evidence.
+
+Technical requirements
+
+21. Reuse the existing PDF export architecture and preserve the blank-page fix.
+22. Preserve Arabic RTL rendering and existing functionality.
+23. Ensure images are high quality and readable when printed.
+24. Use a print-safe approach to full-bleed backgrounds, with sufficient internal margins for important text.
+25. Add regression tests for evidence sizing, metadata placement, multipage attachments, page ordering, Arabic rendering, and accurate index references.
+26. Generate a new synthetic Arabic PDF sample containing both landscape and portrait evidence images, long and short descriptions, and a multipage PDF attachment.
+27. Visually inspect every generated page and confirm that no content is clipped, distorted, overlapping, or unnecessarily separated.
+28. Run all automated tests, TypeScript checks, and the production build.
+
+Safety requirements
+
+Do not modify authentication, subscriptions, payments, Supabase RLS, production data, or real teacher files.
+
+Do not deploy.
+
+Delivery
+
+Provide the downloadable revised synthetic PDF and a concise report covering the changes, tests, and any remaining limitations.
+
+The final result should resemble a premium professionally designed teacher achievement portfolio, with full-page A4 styling and large evidence images accompanied by concise metadata directly beneath them.

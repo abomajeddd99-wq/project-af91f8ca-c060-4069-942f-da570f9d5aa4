@@ -1,0 +1,53 @@
+Task 13 — Teacher-Controlled Evidence Layout & Smart Pagination
+
+Implement the following improvements in the Enjazi Teacher Portfolio PDF generator.
+
+1. Evidence Layout Selector
+
+Allow teachers to choose:
+
+* 1 evidence item per A4 page.
+* 2 evidence items per A4 page.
+* 3 evidence items per A4 page.
+* 4 evidence items per A4 page.
+
+For the four-evidence option, use a strict 2×2 grid: two items on top and two items below.
+
+Each evidence image must have its concise description directly underneath it. Do not display original evidence filenames or internal file identifiers.
+
+2. Live A4 Preview
+
+Provide an interactive preview that updates immediately when the teacher changes the layout.
+
+The preview must reflect the actual PDF layout, including image sizes, descriptions, page breaks, and the approved official educational theme.
+
+3. Smart Pagination
+
+* Preserve original image aspect ratios.
+* Never crop, stretch, or distort evidence images.
+* Prevent text overlap, clipping, and blank pages.
+* Keep each image and its concise description together.
+* Automatically move overflowing evidence to the next page.
+* Use available space efficiently while maintaining readability.
+* Keep the selected layout as the target maximum number of evidence items per page.
+* Preserve all original PDF attachment pages, dimensions, orientation, rotation, and order.
+
+4. Layout Preferences
+
+Allow teachers to configure the layout globally or independently for each performance standard.
+
+Use two evidence items per page as the default setting.
+
+5. Preserve Existing Work
+
+Retain the approved Ministry of Education–inspired educational cover, Arabic RTL styling, portrait A4 layout, existing portfolio sections, index references, and page numbering.
+
+Do not change authentication, production records, subscriptions, payments, or Supabase security policies.
+
+6. Verification
+
+Test all four layout options, mixed image dimensions, long Arabic descriptions, multiple standards, original PDF attachments, and page-break behavior.
+
+Generate a sample PDF demonstrating each layout option and visually inspect every page.
+
+Do not deploy until the sample is reviewed and explicitly approved.

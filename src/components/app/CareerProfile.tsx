@@ -1,0 +1,44 @@
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { careerPathsQuery } from "@/lib/catalog";
+import { profileQuery } from "@/lib/queries";
+import { validateCareerSelection } from "@/lib/career";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+export function CareerProfile({ userId }: { userId: string }) {
+  const { data: roles } = useSuspenseQuery(careerPathsQuery());
+  const { data: profile } = useSuspenseQuery(profileQuery(userId));
+  const [roleId, setRoleId] = useState(profile?.professional_role_id ?? "");
+  const [name, setName] = useState(profile?.full_name ?? "");
+  const [school, setSchool] = useState(profile?.school ?? "");
+  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  async function save(event: FormEvent) {
+    event.preventDefault();
+    if (!validateCareerSelection(roleId, roles) || name.trim().length < 3) { toast.error("أكمل الاسم واختر مسارك الوظيفي."); return; }
+    setSaving(true);
+    try {
+      const { error } = await supabase.from("profiles").update({ full_name: name.trim(), school: school.trim() || null,
+        professional_role_id: roleId, job_title: roles.find((r) => r.id === roleId)?.title ?? null,
+        onboarding_completed_at: new Date().toISOString(), }).eq("id", userId);
+      if (error) throw error;
+      await queryClient.invalidateQueries();
+      toast.success("تم حفظ المسار الوظيفي.");
+      await navigate({ to: "/dashboard" });
+    } catch { toast.error("تعذر حفظ المسار الوظيفي."); } finally { setSaving(false); }
+  }
+  return <form onSubmit={save} className="mx-auto max-w-xl space-y-5">
+    <h1 className="text-2xl font-bold text-primary-deep">استكمال الحساب الشخصي</h1>
+    <div className="space-y-2"><Label htmlFor="career-name">الاسم الكامل</Label><Input id="career-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={200} required /></div>
+    <div className="space-y-2"><Label htmlFor="career-role">المسار الوظيفي</Label><Select value={roleId} onValueChange={setRoleId}><SelectTrigger id="career-role" className="w-full"><SelectValue placeholder="اختر المسار الوظيفي" /></SelectTrigger><SelectContent>{roles.filter((r) => r.is_active).map((r) => <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>)}</SelectContent></Select></div>
+    <div className="space-y-2"><Label htmlFor="career-school">المدرسة / جهة العمل</Label><Input id="career-school" value={school} onChange={(e) => setSchool(e.target.value)} maxLength={200} /></div>
+    <Button type="submit" disabled={saving}>{saving ? "جارٍ الحفظ…" : "حفظ المسار والمتابعة"}</Button>
+  </form>;
+}

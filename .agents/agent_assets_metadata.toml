@@ -1,0 +1,128 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Skcd73wfuJkbUPScwmTks"
+uri = "file://generated-artifacts/injazi-synthetic-portfolio-review.pdf"
+type = "pdf"
+title = "Enjazi — Royal Emerald portfolio sample"
+description = "Visually reviewed 22-page synthetic Arabic portfolio with all 11 synthetic standards, portrait and landscape images, and all five original pages of a synthetic PDF attachment."
+logical_id = "f3073ffa-5bf9-4f9e-87ba-699c4fc5f580"
+content_hash = "sha256:fa11c1c72504b08ab0b3f0e77605d91b19ed5fceded1ec048ad649876fe672d1"
+size = 2905716
+mtime_ms = 1794739539994
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/f3073ffa-5bf9-4f9e-87ba-699c4fc5f580/c77d655c-0937-407d-8ff7-cfdd25e2bd45"
+storage_version_token = "1794739610066117"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "NuE1PInBuoQHFRs3BMMc6"
+uri = "file://generated-artifacts/injazi-task10-full-bleed-portfolio.pdf"
+type = "pdf"
+title = "Task 10 — Full-page A4 portfolio sample"
+description = "Visually reviewed 21-page synthetic Arabic PDF: full-bleed styling, combined landscape/portrait image evidence and captions, a long-description continuation, and all five unmodified source-PDF pages."
+logical_id = "6059db2d-b346-4d70-ab78-48e643fd584b"
+content_hash = "sha256:a0aec0a18ccf723a6d90832cd3a11e753b3bb587c69f945e3a6079f14995f51c"
+size = 2767053
+mtime_ms = 1794763614021
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/6059db2d-b346-4d70-ab78-48e643fd584b/db64477e-eb0e-4e5f-8c44-5c01f83e3756"
+storage_version_token = "1794763681205153"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "hDiZYrFOT4efQwiiA8B0B"
+uri = "file://generated-artifacts/injazi-task11-1-image-example.pdf"
+type = "pdf"
+title = "Task 11 — 1 image under one standard"
+description = "Synthetic Arabic portfolio. Evidence starts on page 7; verified grouping: 1. Portrait A4, original-resolution images, separate captions."
+logical_id = "164de78c-abbf-4896-9233-ac8a10e26321"
+content_hash = "sha256:31a3209d32c921d7fa0cb83fbdcb5905874108fb5d7495711a05d07f8e351019"
+size = 912627
+mtime_ms = 1794765080677
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/164de78c-abbf-4896-9233-ac8a10e26321/b643291f-3b6f-4a43-902c-29d12960b89e"
+storage_version_token = "1794765270770822"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "ayGtMgFzzCq5c8ubRQnvx"
+uri = "file://generated-artifacts/injazi-task11-2-image-example.pdf"
+type = "pdf"
+title = "Task 11 — 2 images under one standard"
+description = "Synthetic Arabic portfolio. Evidence starts on page 7; verified grouping: 2. Portrait A4, original-resolution images, separate captions."
+logical_id = "1eadd67b-d2cd-40dc-a79d-611a036b5d9b"
+content_hash = "sha256:b32cb08172a30faefaf1879be6a9f05c5519488dfcdd0fd07cba338563543efd"
+size = 963247
+mtime_ms = 1794764950941
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/1eadd67b-d2cd-40dc-a79d-611a036b5d9b/0e2a912c-ef10-4eb4-a3f1-0f7490f0f191"
+storage_version_token = "1794765272095047"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "rmBY7UTdE4ST3lRmQRhIm"
+uri = "file://generated-artifacts/injazi-task11-3-image-example.pdf"
+type = "pdf"
+title = "Task 11 — 3 images under one standard"
+description = "Synthetic Arabic portfolio. Evidence starts on page 7; verified grouping: 2 + 1. Portrait A4, original-resolution images, separate captions."
+logical_id = "8ebf37a2-0f70-44de-9cce-e2dfff23d185"
+content_hash = "sha256:3cf2ab8d58deb7c7aeb83688f2b505169e452dad3a75a00afb41d26c5d191371"
+size = 1055238
+mtime_ms = 1794765098827
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/8ebf37a2-0f70-44de-9cce-e2dfff23d185/aa7f3dc2-29c2-466c-9f3e-48b30d4039f2"
+storage_version_token = "1794765273355686"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "BSdVCK37gBW--G-dNe05G"
+uri = "file://generated-artifacts/injazi-task11-4-image-example.pdf"
+type = "pdf"
+title = "Task 11 — 4 images under one standard"
+description = "Synthetic Arabic portfolio. Evidence starts on page 7; verified grouping: 2 + 2. Portrait A4, original-resolution images, separate captions."
+logical_id = "4be1303a-314b-46d9-96a1-3253878de319"
+content_hash = "sha256:7da2414490af121f16e91de6b9a4d190d1af5f58b79c19a29667c897c948eaa8"
+size = 1103252
+mtime_ms = 1794765116094
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/4be1303a-314b-46d9-96a1-3253878de319/cbbaff68-525d-4f4f-9b6c-26e48cb889e9"
+storage_version_token = "1794765274619122"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "NNoohPonjIqh9thiWldGZ"
+uri = "file://generated-artifacts/injazi-royal-standard-covers-review.pdf"
+type = "pdf"
+title = "Royal Luxury — 11 dedicated standard covers"
+description = "Complete 36-page synthetic Arabic portfolio with individually designed covers for standards 01–11, 17 synthetic images using the approved pagination, and all five original PDF attachment pages. Standard covers start on pages 6, 14, 16, 19, 22, 24, 26, 28, 30, 32 and 34."
+logical_id = "c414f643-93b6-4ca5-b6f3-09e8ba9e62a1"
+content_hash = "sha256:fa43797a990587d28c05daf3c4aa4c638ec4d663bcef8be7956ed59ef2a20a98"
+size = 5500449
+mtime_ms = 1794767128601
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/c414f643-93b6-4ca5-b6f3-09e8ba9e62a1/4dcacbb8-1d76-4f9f-837b-9d6c63ac3e9b"
+storage_version_token = "1794767227109705"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "AxP-i6MIVI9lw6VD-KQNA"
+uri = "file://generated-artifacts/injazi-final-royal-portfolio-review.pdf"
+type = "pdf"
+title = "Final Royal Luxury portfolio — synthetic review sample"
+description = "37 visually reviewed pages: all 11 standard covers, 16 original-resolution synthetic images, image groups of 1–4, a no-evidence standard, long Arabic text, correct final index references, and all five original attachment pages preserved. Generated pages are portrait A4; original PDF evidence retains its original dimensions and orientation."
+logical_id = "3d34d90c-c2a8-4996-adbd-cc707c5232dc"
+content_hash = "sha256:76f9e49933d163524320e6f5ef5b4ad519fb856a875fc8b4d61dd2d61a076470"
+size = 6494584
+mtime_ms = 1794857090169
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/3d34d90c-c2a8-4996-adbd-cc707c5232dc/b1e58bf3-4d89-4c94-bb34-f2d7d6bebef1"
+storage_version_token = "1794857185821051"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "cC-HGXebjqmaQXw2MeLE5"
+uri = "file://generated-artifacts/injazi-teacher-layouts-review.pdf"
+type = "pdf"
+title = "Teacher-Controlled Evidence Layouts — Review PDF"
+description = "43 synthetic pages demonstrating layouts 1–4, RTL 2×2 grids, overflow pagination, all 11 standard covers, long Arabic descriptions, and five unchanged original PDF pages. Every page visually reviewed."
+logical_id = "e1f851be-09c5-4a70-a15d-11a6ffecf767"
+content_hash = "sha256:5dfa7e8edf32e5f8429adc105ba4ee51ccf7a7716f1cec493d92b27dcda9b624"
+size = 7060884
+mtime_ms = 1794861383033
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:37de0cb3-a468-4890-8397-247b8c672363/e1f851be-09c5-4a70-a15d-11a6ffecf767/e0266f44-69f5-4116-9669-5466870eb3f8"
+storage_version_token = "1794862204123776"
+content_type = "application/pdf"
