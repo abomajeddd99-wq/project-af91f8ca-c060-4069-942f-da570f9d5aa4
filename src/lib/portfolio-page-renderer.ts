@@ -1,48 +1,55 @@
 import { toPng } from "html-to-image";
 import { validatePortfolioRaster } from "./portfolio-raster-quality";
-import { applyPortfolioPalette } from "./portfolio-theme";
+import { applyPortfolioPalette, getPortfolioTheme, type PortfolioTemplateId } from "./portfolio-theme";
 
 interface PortfolioPageFrame {
   pageNumber: number;
   totalPages: number;
 }
 
-export function portfolioPageMarkup(content: string, heading?: string, frame?: PortfolioPageFrame): string {
-  return applyPortfolioPalette(pageMarkup(content, heading, frame));
+export function portfolioPageMarkup(
+  content: string,
+  heading?: string,
+  frame?: PortfolioPageFrame,
+  template: PortfolioTemplateId = "ministerial",
+): string {
+  return applyPortfolioPalette(pageMarkup(content, heading, frame), template);
 }
 
 function pageMarkup(content: string, heading?: string, frame?: PortfolioPageFrame): string {
   if (content.includes('data-standard-cover="true"') || content.includes('data-royal-page="true"')) {
     const educationalCover = content.includes('data-cover-content="true"');
     return `<div style="height:100%;position:relative;background:#F8F5EC">${content}
-      ${frame && !educationalCover ? `<span dir="ltr" style="position:absolute;bottom:44px;left:64px;font-family:monospace;background:#07584F;padding:3px 8px;color:#F8F5EC;font-size:11px;letter-spacing:.04em">${frame.pageNumber} / ${frame.totalPages}</span>` : ""}
+      ${frame && !educationalCover ? `<span dir="ltr" style="position:absolute;bottom:42px;left:64px;font-family:monospace;background:#07584F;padding:3px 10px;border-radius:999px;border:1px solid #C5A46D;color:#F8F5EC;font-size:11px;letter-spacing:.04em">${frame.pageNumber} / ${frame.totalPages}</span>` : ""}
     </div>`;
   }
   const headingMarkup = heading
-    ? `<div style="margin:16px 0 20px;display:flex;align-items:center;gap:12px">
-        <span style="display:block;width:3px;height:31px;background:#C5A15B;flex-shrink:0"></span>
-        <h1 style="margin:0;color:#07594F;font-size:25px;line-height:1.4;font-weight:700;overflow-wrap:anywhere">${escapeHtml(heading)}</h1>
+    ? `<div style="margin:14px 0 18px;display:flex;align-items:center;gap:12px">
+        <span style="display:block;width:4px;height:30px;border-radius:3px;background:#C5A15B;flex-shrink:0"></span>
+        <h1 style="margin:0;color:#07594F;font-size:24px;line-height:1.4;font-weight:800;overflow-wrap:anywhere">${escapeHtml(heading)}</h1>
       </div>`
     : "";
   const pageNumber = frame
-    ? `<span dir="ltr" style="font-family:monospace;color:#07594F;font-size:10px;letter-spacing:.04em">${frame.pageNumber} / ${frame.totalPages}</span>`
+    ? `<span dir="ltr" style="font-family:monospace;background:#F0ECE2;border:1px solid #D8C9AA;border-radius:999px;padding:1px 9px;color:#07594F;font-size:10px;font-weight:700;letter-spacing:.04em">${frame.pageNumber} / ${frame.totalPages}</span>`
     : "";
   return `
-    <div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:#F8F5EC;padding:50px 53px;position:relative">
-      <span aria-hidden="true" style="position:absolute;inset:24px;border:1px solid #C5A46D;opacity:.4;pointer-events:none"></span>
-      <span aria-hidden="true" style="position:absolute;top:18px;right:18px;width:20px;height:20px;border-top:1px solid #C5A15B;border-right:1px solid #C5A15B"></span>
-      <span aria-hidden="true" style="position:absolute;bottom:18px;left:18px;width:20px;height:20px;border-bottom:1px solid #C5A15B;border-left:1px solid #C5A15B"></span>
-      <header style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #D8C9AA;padding:0 0 8px;flex-shrink:0">
-        <div style="display:flex;align-items:center;gap:8px;font-family:'Readex Pro','IBM Plex Sans Arabic',sans-serif;font-size:16px;font-weight:700;color:#07594F">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1px solid #C5A15B;border-radius:50%;font-size:11px;color:#C5A15B">إ</span>
-          إنجازي
+    <div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:#F8F5EC;padding:48px 52px;position:relative">
+      <span aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:6px;background:#07584F"></span>
+      <span aria-hidden="true" style="position:absolute;top:6px;left:0;right:0;height:2px;background:#C5A46D"></span>
+      <span aria-hidden="true" style="position:absolute;inset:22px;border:1px solid #C5A46D;border-radius:10px;opacity:.45;pointer-events:none"></span>
+      <span aria-hidden="true" style="position:absolute;top:16px;right:16px;width:22px;height:22px;border-top:2px solid #C5A15B;border-right:2px solid #C5A15B;border-top-right-radius:6px"></span>
+      <span aria-hidden="true" style="position:absolute;bottom:16px;left:16px;width:22px;height:22px;border-bottom:2px solid #C5A15B;border-left:2px solid #C5A15B;border-bottom-left-radius:6px"></span>
+      <header style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #D8C9AA;padding:0 0 9px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:8px;font-family:'Readex Pro','IBM Plex Sans Arabic',sans-serif;font-size:15px;font-weight:700;color:#07594F">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#07584F;border-radius:7px;font-size:12px;color:#F8F5EC">إ</span>
+          منصة إنجازي
         </div>
-        <div style="font-size:11px;color:#586A66;letter-spacing:.02em">ملف الإنجاز الوظيفي</div>
+        <div style="font-size:11px;font-weight:600;color:#586A66;padding:2px 10px;border-radius:999px;background:#F0ECE2">ملف شواهد الأداء الوظيفي</div>
       </header>
       ${headingMarkup}
       <main style="flex:1;min-height:0;overflow:visible;box-sizing:border-box;color:#202B2A">${content}</main>
-      <footer style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #D8C9AA;margin-top:11px;padding-top:7px;color:#697773;font-size:9px;line-height:1.4;flex-shrink:0">
-        <span>منصة إنجازي · ملف مهني للعرض والمراجعة</span>${pageNumber}
+      <footer style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #D8C9AA;margin-top:11px;padding-top:8px;color:#697773;font-size:9.5px;line-height:1.4;flex-shrink:0">
+        <span>منصة إنجازي · ملف مهني موثق للعرض والمراجعة</span>${pageNumber}
       </footer>
     </div>
   `;
@@ -54,13 +61,13 @@ export function fitStandardCover(element: HTMLElement): void {
   const body = element.querySelector<HTMLElement>("[data-standard-body]");
   if (viewport && body) {
     const bounds = { width: viewport.clientWidth, height: viewport.clientHeight };
-    if (!bounds.width || !bounds.height) return; // Non-layout test environments.
+    if (!bounds.width || !bounds.height) return;
     body.style.transformOrigin = "top right";
     body.style.position = "absolute";
     body.style.top = "0";
     body.style.right = "0";
     body.style.flexShrink = "0";
-    for (let percentage = 100; percentage >= 80; percentage -= 2) {
+    for (let percentage = 100; percentage >= 74; percentage -= 2) {
       const scale = percentage / 100;
       body.style.width = `${bounds.width / scale}px`;
       body.style.transform = `scale(${scale})`;
@@ -78,7 +85,7 @@ export function fitStandardCover(element: HTMLElement): void {
   const availableHeight = 860 - cover.offsetTop;
   if (availableHeight <= 0 || !cover.offsetHeight) return;
   cover.style.transformOrigin = "top center";
-  for (let percentage = 100; percentage >= 80; percentage -= 2) {
+  for (let percentage = 100; percentage >= 78; percentage -= 2) {
     const scale = percentage / 100;
     cover.style.transform = `scale(${scale})`;
     if (cover.offsetHeight * scale <= availableHeight + 0.5) {
@@ -119,9 +126,11 @@ export async function renderPortfolioPage(
   content: string,
   heading?: string,
   frame?: PortfolioPageFrame,
+  template: PortfolioTemplateId = "ministerial",
 ): Promise<Uint8Array> {
   if (typeof document === "undefined") throw new Error("PDF export is only available in a browser.");
   await document.fonts?.ready;
+  const theme = getPortfolioTheme(template);
   const element = document.createElement("div");
   element.lang = "ar";
   element.dir = "rtl";
@@ -140,14 +149,14 @@ export async function renderPortfolioPage(
     "width:794px",
     "height:1123px",
     "overflow:hidden",
-    "background:#F8F5EC",
-    "color:#252A28",
+    `background:${theme.bg}`,
+    `color:${theme.ink}`,
     "font-family:'IBM Plex Sans Arabic',system-ui,sans-serif",
     "font-size:18px",
     "line-height:1.75",
     "direction:rtl",
   ].join(";");
-  element.innerHTML = portfolioPageMarkup(content, heading, frame);
+  element.innerHTML = portfolioPageMarkup(content, heading, frame, template);
   document.body.appendChild(element);
   try {
     await document.fonts?.ready;
@@ -157,8 +166,6 @@ export async function renderPortfolioPage(
     fitStandardCover(element);
     assertGeneratedTextFits(element);
     let dataUrl = "";
-    // One lower-resolution retry reduces transient canvas/memory failures.
-    // A failed page aborts export explicitly; it is never deleted or replaced.
     for (const pixelRatio of [3, 2]) {
       try {
         dataUrl = await toPng(element, {
@@ -167,7 +174,7 @@ export async function renderPortfolioPage(
           height: 1123,
           canvasWidth: 794,
           canvasHeight: 1123,
-          backgroundColor: "#F8F5EC",
+          backgroundColor: theme.bg,
           cacheBust: true,
           skipFonts: true,
           style: {

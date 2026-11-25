@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { profileQuery, type Profile } from "@/lib/queries";
+import { isAdminQuery, profileQuery, type Profile } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,6 +43,7 @@ function ProfilePage() {
   const { user } = Route.useRouteContext();
   const queryClient = useQueryClient();
   const { data: profile } = useSuspenseQuery(profileQuery(user.id));
+  const { data: isAdmin = false } = useQuery(isAdminQuery());
   const [values, setValues] = useState<Record<string, string>>(() => {
     const v: Record<string, string> = {};
     for (const f of fields) v[f.key] = profile?.[f.key] != null ? String(profile[f.key]) : "";
@@ -52,6 +53,9 @@ function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const get = (k: string): string => values[k] ?? "";
 
+  const isRoleLocked = Boolean(profile?.professional_role_id && !isAdmin);
+  const isNameLocked = Boolean(profile?.full_name?.trim() && profile?.professional_role_id && !isAdmin);
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const years = get("years_experience").trim() === "" ? null : Number(get("years_experience"));
@@ -59,7 +63,8 @@ function ProfilePage() {
       toast.error("سنوات الخبرة يجب أن تكون رقمًا بين 0 و 60.");
       return;
     }
-    if (get("full_name").trim().length < 3) {
+    const finalName = isNameLocked && profile?.full_name ? profile.full_name : get("full_name").trim().slice(0, 200);
+    if (finalName.length < 3) {
       toast.error("يرجى كتابة الاسم الكامل.");
       return;
     }
@@ -68,7 +73,7 @@ function ProfilePage() {
     const { error } = await supabase.from("profiles").upsert({
       id: user.id,
       email: user.email ?? null,
-      full_name: get("full_name").trim().slice(0, 200),
+      full_name: finalName,
       job_title: clean("job_title"),
       subject: clean("subject"),
       stage: clean("stage"),
@@ -94,7 +99,15 @@ function ProfilePage() {
         <p className="text-xs font-semibold text-primary">بيانات الغلاف والسيرة المهنية</p>
         <h1 className="mt-1 text-2xl font-bold text-primary-deep">ملفي الشخصي</h1>
         <p className="mt-1 text-sm text-muted-foreground">تظهر هذه البيانات في غلاف ملف الإنجاز وصفحة السيرة المهنية.</p>
-        <Button asChild variant="outline" className="mt-3"><Link to="/onboarding">اختيار / تغيير المسار الوظيفي</Link></Button>
+        {!isRoleLocked ? (
+          <Button asChild variant="outline" className="mt-3">
+            <Link to="/onboarding">اختيار / تغيير المسار الوظيفي</Link>
+          </Button>
+        ) : (
+          <p className="mt-3 text-xs font-medium text-muted-foreground">
+            الحساب مرتبط بمسارك الوظيفي والاسم المعتمد، ولتعديلهما يرجى التواصل مع إدارة المنصة.
+          </p>
+        )}
       </div>
       <form onSubmit={onSubmit} className="space-y-5 rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
         <div className="space-y-2">
@@ -112,6 +125,7 @@ function ProfilePage() {
                 inputMode={f.type === "number" ? "numeric" : undefined}
                 placeholder={f.placeholder}
                 value={get(f.key)}
+                disabled={f.key === "full_name" && isNameLocked}
                 onChange={(e) => setValues((v) => ({ ...v, [f.key]: e.target.value }))}
                 maxLength={200}
                 className={f.dir === "ltr" ? "h-11 text-left" : "h-11"}

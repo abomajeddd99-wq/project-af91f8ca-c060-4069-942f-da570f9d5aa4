@@ -1,3 +1,4 @@
+import { getPortfolioTheme, type PortfolioTemplateId } from "./portfolio-theme";
 export interface EducationalCoverInput {
   name: string;
   school?: string;
@@ -7,8 +8,9 @@ export interface EducationalCoverInput {
   jobTitle?: string;
   subtitle: string;
   date: string;
-  layout: "royal" | "classic";
-  accent: "gold" | "emerald";
+  layout?: "royal" | "classic";
+  accent?: "gold" | "emerald";
+  template?: PortfolioTemplateId;
 }
 
 export interface EducationalCvInput {
@@ -76,18 +78,180 @@ function bookMotif(): string {
     </g>`;
 }
 
-export function buildEducationalCover(input: EducationalCoverInput): string {
-  const accent = input.accent === "emerald" ? EMERALD : GOLD;
-  const rows = [
-    coverRow("اسم المعلم", input.name, "person", 0),
-    coverRow("المدرسة", input.school, "school", 1),
-    coverRow("الإدارة التعليمية", input.educationOffice, "office", 2),
-    coverRow("المسمى الوظيفي", input.jobTitle, "work", 3),
-    coverRow("العام الدراسي", input.year, "calendar", 4),
-  ].join("");
-
+function saudiEmblem(color: string): string {
   return `
-    <section data-royal-page="true" data-royal-layout="${escapeHtml(input.layout)}" data-royal-accent="${escapeHtml(input.accent)}" style="position:absolute;inset:0;box-sizing:border-box;width:794px;height:1123px;overflow:hidden;background:${IVORY};color:${INK};direction:rtl;text-align:right;font-family:'IBM Plex Sans Arabic','Readex Pro',system-ui,sans-serif">
+    <svg aria-hidden="true" viewBox="0 0 120 110" style="position:absolute;left:56px;bottom:26px;width:82px;height:75px;pointer-events:none">
+      <g fill="${color}" stroke="${color}" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="57" y="28" width="6" height="36" rx="2" stroke="none"/>
+        <path d="M60 28 C52 14 38 11 26 17 C38 18 48 22 57 31 Z" stroke="none"/>
+        <path d="M60 28 C68 14 82 11 94 17 C82 18 72 22 63 31 Z" stroke="none"/>
+        <path d="M60 26 C55 11 45 5 35 6 C46 11 53 18 58 29 Z" stroke="none"/>
+        <path d="M60 26 C65 11 75 5 85 6 C74 11 67 18 62 29 Z" stroke="none"/>
+        <path d="M60 24 C59 10 60 3 60 2 C61 10 61 18 60 26 Z" stroke="none"/>
+        <path d="M58 34 C46 27 33 28 24 35 C35 33 46 34 57 39 Z" stroke="none"/>
+        <path d="M62 34 C74 27 87 28 96 35 C85 33 74 34 63 39 Z" stroke="none"/>
+        <path d="M22 78 Q56 76 92 54" fill="none" stroke-width="4.2"/>
+        <path d="M98 78 Q64 76 28 54" fill="none" stroke-width="4.2"/>
+        <path d="M24 72 L15 84 M29 82 L17 75" fill="none" stroke-width="2.8"/>
+        <path d="M96 72 L105 84 M91 82 L103 75" fill="none" stroke-width="2.8"/>
+      </g>
+    </svg>`;
+}
+
+function themedCoverIcon(kind: "person" | "school" | "office" | "work" | "calendar", color: string): string {
+  const paths: Record<typeof kind, string> = {
+    person: '<circle cx="12" cy="8" r="3.2"/><path d="M5.5 20v-1.6a6.5 6.5 0 0 1 13 0V20z"/>',
+    school: '<path d="M3 20h18M5 20v-9l7-4 7 4v9M9 20v-5h6v5M8 12h.01M12 11h.01M16 12h.01"/><path d="m9 7 3-3 3 3"/>',
+    office: '<path d="M4 20V5h10v15M14 10h6v10M7 8h1M10 8h1M7 11h1M10 11h1M7 14h1M10 14h1M17 13h1M17 16h1M2 20h20"/>',
+    work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M12 14h2M17 14h.01M7 17h2M12 17h2"/>',
+  };
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" style="display:block;width:26px;height:26px;fill:none;stroke:${color};stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">${paths[kind]}</svg>`;
+}
+
+function themedCoverRows(input: EducationalCoverInput, primary: string, ink: string, divider: string): string {
+  const entries: [string, string | undefined, "person" | "school" | "office" | "work" | "calendar"][] = [
+    ["اسم المعلم", input.name, "person"],
+    ["المدرسة", input.school, "school"],
+    ["الإدارة التعليمية", input.educationOffice, "office"],
+    ["المسمى الوظيفي", input.jobTitle, "work"],
+    ["العام الدراسي", input.year, "calendar"],
+  ];
+  return entries
+    .map(
+      ([label, value, icon], index) => `
+    <div data-teacher-field="${icon}" dir="rtl" style="display:grid;grid-template-columns:40px minmax(150px,172px) minmax(0,1fr);align-items:center;gap:14px;min-height:60px;padding:9px 20px;box-sizing:border-box;${index < 4 ? `border-bottom:1px solid ${divider};` : ""}">
+      <span style="display:flex;align-items:center;justify-content:center">${themedCoverIcon(icon, primary)}</span>
+      <span style="color:${primary};font-size:16.5px;line-height:1.45;font-weight:700;white-space:nowrap">${label}</span>
+      <span style="min-width:0;color:${ink};font-size:16.5px;line-height:1.55;text-align:right;overflow-wrap:anywhere;word-break:normal;white-space:pre-wrap">${escapeHtml(value || "—")}</span>
+    </div>`,
+    )
+    .join("");
+}
+
+export function buildEducationalCover(input: EducationalCoverInput): string {
+  const template = input.template ?? "ministerial";
+  const theme = getPortfolioTheme(template);
+  const rows = themedCoverRows(input, theme.primary, theme.ink, theme.border);
+  const ministryLogo = `<img data-ministry-logo="true" src="/ministry-of-education-logo-white.svg" alt="وزارة التعليم" style="position:absolute;top:20px;right:42px;width:184px;height:142px;object-fit:contain;filter:${theme.logoFilter}">`;
+
+  if (template === "midnight") {
+    return `
+    <section data-royal-page="true" data-royal-layout="midnight" data-royal-accent="coral" style="position:absolute;inset:0;box-sizing:border-box;width:794px;height:1123px;overflow:hidden;background:${theme.bg};color:${theme.ink};direction:rtl;text-align:right;font-family:'IBM Plex Sans Arabic','Readex Pro',system-ui,sans-serif">
+      <svg aria-hidden="true" width="794" height="1123" viewBox="0 0 794 1123" style="position:absolute;inset:0;width:794px;height:1123px;pointer-events:none">
+        <defs>
+          <pattern id="midnight-dots" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="2" fill="${theme.primary}" opacity=".16"/>
+          </pattern>
+        </defs>
+        <path d="M0 0H320C270 115 165 215 0 265Z" fill="${theme.primary}"/>
+        <path d="M0 0H245C195 95 110 175 0 212Z" fill="${theme.primaryMid}" opacity=".65"/>
+        <circle cx="242" cy="186" r="28" fill="${theme.accent}" opacity=".92"/>
+        <rect x="26" y="220" width="132" height="110" fill="url(#midnight-dots)"/>
+        <path d="M0 950 C210 910 530 1005 794 928 V1123 H0Z" fill="${theme.primary}"/>
+        <path d="M0 950 C210 910 530 1005 794 928" fill="none" stroke="${theme.accent}" stroke-width="6"/>
+        <rect x="22" y="22" width="750" height="1079" rx="18" fill="none" stroke="${theme.border}" stroke-width="1.2"/>
+      </svg>
+      ${ministryLogo}
+      <main data-cover-content="true" style="position:absolute;top:164px;left:82px;right:82px;box-sizing:border-box;text-align:center">
+        <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 22px;border-radius:999px;background:${theme.accentSoft};border:1px solid ${theme.accent};color:${theme.accentText};font-size:14px;font-weight:700">ملف توثيق الأداء المهني</div>
+        <div style="margin:18px auto 0;color:${theme.primary};font-size:46px;font-weight:800;line-height:1.2">ملف</div>
+        <h1 style="margin:0 auto;color:${theme.primary};font-size:48px;font-weight:800;line-height:1.4;letter-spacing:-.02em;white-space:nowrap">شواهد الأداء الوظيفي</h1>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:10px auto 0">
+          <span aria-hidden="true" style="width:86px;height:3px;border-radius:2px;background:${theme.accent}"></span>
+          <span style="padding:6px 26px;border-radius:999px;background:${theme.primary};color:#FFFFFF;font-size:19px;font-weight:700">إنجازي للمعلم</span>
+          <span aria-hidden="true" style="width:86px;height:3px;border-radius:2px;background:${theme.accent}"></span>
+        </div>
+        ${input.subtitle ? `<p style="margin:10px auto 0;color:${theme.muted};font-size:14px;line-height:1.5;overflow-wrap:anywhere">${escapeHtml(input.subtitle)}</p>` : ""}
+        <div data-teacher-table="true" dir="rtl" style="width:100%;margin:30px auto 0;border:1.5px solid ${theme.border};border-top:4px solid ${theme.accent};border-radius:22px;background:#FFFFFF;box-sizing:border-box;text-align:right;overflow:hidden;box-shadow:0 14px 32px rgba(27,42,74,.07)">
+          ${rows}
+        </div>
+      </main>
+      <span style="position:absolute;left:180px;right:180px;bottom:42px;color:#FFFFFF;font-size:9.5px;line-height:1.4;text-align:center;white-space:nowrap;opacity:.9">منصة إنجازي مستقلة ولا تمثل وزارة التعليم</span>
+      <span dir="ltr" style="position:absolute;right:46px;bottom:34px;color:#FFFFFF;font-family:system-ui,sans-serif;font-size:10.5px;letter-spacing:.04em">${escapeHtml(input.date)}</span>
+    </section>`;
+  }
+
+  if (template === "rose") {
+    return `
+    <section data-royal-page="true" data-royal-layout="rose" data-royal-accent="gold" style="position:absolute;inset:0;box-sizing:border-box;width:794px;height:1123px;overflow:hidden;background:${theme.bg};color:${theme.ink};direction:rtl;text-align:right;font-family:'IBM Plex Sans Arabic','Readex Pro',system-ui,sans-serif">
+      <svg aria-hidden="true" width="794" height="1123" viewBox="0 0 794 1123" style="position:absolute;inset:0;width:794px;height:1123px;pointer-events:none">
+        <defs>
+          <pattern id="rose-lattice" width="38" height="38" patternUnits="userSpaceOnUse">
+            <path d="M19 2 36 19 19 36 2 19Z" fill="none" stroke="${theme.accent}" stroke-width=".6" opacity=".28"/>
+            <circle cx="19" cy="19" r="1.4" fill="${theme.primary}" opacity=".2"/>
+          </pattern>
+        </defs>
+        <rect width="794" height="1123" fill="url(#rose-lattice)" opacity=".28"/>
+        <path d="M0 0H390C305 52 215 120 130 212C76 270 30 330 0 385Z" fill="${theme.primary}"/>
+        <path d="M0 0H312C236 52 156 112 85 186C44 228 16 266 0 298" fill="none" stroke="${theme.accent}" stroke-width="5"/>
+        <circle cx="176" cy="242" r="16" fill="${theme.accent}" opacity=".85"/>
+        <circle cx="212" cy="212" r="7" fill="${theme.primaryMid}" opacity=".7"/>
+        <path d="M0 915 C160 870 310 970 500 975 C635 979 725 948 794 918 V1123 H0Z" fill="${theme.primary}"/>
+        <path d="M0 915 C160 870 310 970 500 975 C635 979 725 948 794 918" fill="none" stroke="${theme.accent}" stroke-width="6"/>
+        <rect x="24" y="24" width="746" height="1075" rx="22" fill="none" stroke="${theme.accent}" stroke-width="1" opacity=".7"/>
+      </svg>
+      ${ministryLogo}
+      <main data-cover-content="true" style="position:absolute;top:154px;left:86px;right:86px;box-sizing:border-box;text-align:center">
+        <div style="width:166px;height:86px;margin:0 auto 6px">
+          <svg aria-hidden="true" width="166" height="86" viewBox="-5 0 142 77" style="display:block;width:166px;height:86px">${bookMotif()}</svg>
+        </div>
+        <div style="margin:0 auto;color:${theme.primary};font-size:46px;font-weight:800;line-height:1.18">ملف</div>
+        <h1 style="margin:0 auto;color:${theme.primary};font-size:48px;font-weight:800;line-height:1.42;letter-spacing:-.02em;white-space:nowrap">شواهد الأداء الوظيفي</h1>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:6px auto 0">
+          <span aria-hidden="true" style="width:88px;height:2px;background:${theme.accent}"></span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:4px 30px;border:1px solid ${theme.accent};border-radius:999px;background:${theme.accentSoft};color:${theme.primary};font-size:21px;font-weight:800">إنجازي للمعلم</span>
+          <span aria-hidden="true" style="width:88px;height:2px;background:${theme.accent}"></span>
+        </div>
+        ${input.subtitle ? `<p style="margin:8px auto 0;color:${theme.muted};font-size:13.5px;line-height:1.5;overflow-wrap:anywhere">${escapeHtml(input.subtitle)}</p>` : ""}
+        <div data-teacher-table="true" dir="rtl" style="width:100%;margin:28px auto 0;border:1.5px solid ${theme.border};border-radius:26px;background:rgba(255,255,255,.95);box-sizing:border-box;text-align:right;overflow:hidden;box-shadow:0 12px 28px rgba(122,46,77,.07)">
+          ${rows}
+        </div>
+      </main>
+      <span style="position:absolute;left:180px;right:180px;bottom:42px;color:#FFFFFF;font-size:9.5px;line-height:1.4;text-align:center;white-space:nowrap">منصة إنجازي مستقلة ولا تمثل وزارة التعليم</span>
+      <span dir="ltr" style="position:absolute;right:46px;bottom:34px;color:#FFFFFF;font-family:system-ui,sans-serif;font-size:10.5px;letter-spacing:.04em">${escapeHtml(input.date)}</span>
+    </section>`;
+  }
+
+  if (template === "classic") {
+    return `
+    <section data-royal-page="true" data-royal-layout="classic" data-royal-accent="gold" style="position:absolute;inset:0;box-sizing:border-box;width:794px;height:1123px;overflow:hidden;background:${theme.bg};color:${theme.ink};direction:rtl;text-align:right;font-family:'IBM Plex Sans Arabic','Readex Pro',system-ui,sans-serif">
+      <svg aria-hidden="true" width="794" height="1123" viewBox="0 0 794 1123" style="position:absolute;inset:0;width:794px;height:1123px;pointer-events:none">
+        <rect x="0" y="0" width="794" height="18" fill="${theme.primary}"/>
+        <rect x="0" y="18" width="794" height="4" fill="${theme.accent}"/>
+        <rect x="28" y="36" width="738" height="1051" fill="none" stroke="${theme.accent}" stroke-width="1.8"/>
+        <rect x="38" y="46" width="718" height="1031" fill="none" stroke="${theme.primary}" stroke-width=".9" opacity=".55"/>
+        <path d="M28 74H66V36M766 74H728V36M28 1049H66V1087M766 1049H728V1087" fill="none" stroke="${theme.primary}" stroke-width="2.2"/>
+        <rect x="0" y="1028" width="794" height="95" fill="${theme.primary}"/>
+        <rect x="0" y="1024" width="794" height="4" fill="${theme.accent}"/>
+      </svg>
+      ${ministryLogo}
+      <div style="position:absolute;top:62px;left:64px;padding:6px 16px;border:1px solid ${theme.accent};border-radius:8px;background:${theme.surface};color:${theme.primary};font-size:12px;font-weight:700">ملف الإنجاز الرسمي</div>
+      <main data-cover-content="true" style="position:absolute;top:178px;left:84px;right:84px;box-sizing:border-box;text-align:center">
+        <div style="width:166px;height:86px;margin:0 auto 10px">
+          <svg aria-hidden="true" width="166" height="86" viewBox="-5 0 142 77" style="display:block;width:166px;height:86px">${bookMotif()}</svg>
+        </div>
+        <div style="margin:0 auto;color:${theme.primary};font-size:46px;font-weight:800;line-height:1.18">ملف</div>
+        <h1 style="margin:0 auto;color:${theme.primary};font-size:48px;font-weight:800;line-height:1.42;letter-spacing:-.02em;white-space:nowrap">شواهد الأداء الوظيفي</h1>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:10px auto 0">
+          <span aria-hidden="true" style="width:94px;height:1.5px;background:${theme.accent}"></span>
+          <span style="padding:5px 28px;border:1.5px solid ${theme.accent};border-radius:8px;background:${theme.accentSoft};color:${theme.accentText};font-size:21px;font-weight:800">إنجازي للمعلم</span>
+          <span aria-hidden="true" style="width:94px;height:1.5px;background:${theme.accent}"></span>
+        </div>
+        ${input.subtitle ? `<p style="margin:8px auto 0;color:${theme.muted};font-size:13.5px;line-height:1.5;overflow-wrap:anywhere">${escapeHtml(input.subtitle)}</p>` : ""}
+        <div data-teacher-table="true" dir="rtl" style="width:100%;margin:30px auto 0;border:1.5px solid ${theme.accent};border-radius:14px;background:#FFFFFF;box-sizing:border-box;text-align:right;overflow:hidden;box-shadow:0 10px 26px rgba(30,77,69,.05)">
+          <div style="padding:10px 20px;background:${theme.primary};color:#FFFFFF;font-size:14px;font-weight:700">البيانات الأساسية للمعلم</div>
+          ${rows}
+        </div>
+      </main>
+      <span style="position:absolute;left:180px;right:180px;bottom:42px;color:${theme.bg};font-size:9.5px;line-height:1.4;text-align:center;white-space:nowrap">منصة إنجازي مستقلة ولا تمثل وزارة التعليم</span>
+      <span dir="ltr" style="position:absolute;right:56px;bottom:34px;color:${theme.bg};font-family:system-ui,sans-serif;font-size:10.5px;letter-spacing:.04em">${escapeHtml(input.date)}</span>
+    </section>`;
+  }
+
+  // القالب الأول: زمردي وزاري
+  return `
+    <section data-royal-page="true" data-royal-layout="${escapeHtml(input.layout ?? "royal")}" data-royal-accent="${escapeHtml(input.accent ?? "gold")}" style="position:absolute;inset:0;box-sizing:border-box;width:794px;height:1123px;overflow:hidden;background:${IVORY};color:${INK};direction:rtl;text-align:right;font-family:'IBM Plex Sans Arabic','Readex Pro',system-ui,sans-serif">
       <svg aria-hidden="true" width="794" height="1123" viewBox="0 0 794 1123" style="position:absolute;inset:0;width:794px;height:1123px;pointer-events:none">
         <defs>
           <pattern id="educational-cover-pattern" width="34" height="34" patternUnits="userSpaceOnUse">
@@ -99,7 +263,7 @@ export function buildEducationalCover(input: EducationalCoverInput): string {
             <stop offset="1" stop-color="${IVORY}" stop-opacity=".15"/>
           </linearGradient>
         </defs>
-        <path d="M0 0H794V1123H0Z" fill="url(#educational-cover-pattern)" opacity=".025"/>
+        <path d="M0 0H794V1123H0Z" fill="url(#educational-cover-pattern)" opacity=".03"/>
         <path d="M0 0H456C361 36 263 93 178 165C99 233 39 310 0 398Z" fill="${DEEP_EMERALD}"/>
         <path d="M0 0H391C304 39 219 91 146 157C82 216 31 277 0 344Z" fill="#087064" opacity=".62"/>
         <path d="M0 0H340C251 42 175 91 108 154C55 204 19 252 0 292Z" fill="url(#educational-cover-wash)"/>
@@ -110,10 +274,10 @@ export function buildEducationalCover(input: EducationalCoverInput): string {
         <path d="M0 870C129 836 224 894 345 936C480 983 639 1029 794 965" fill="none" stroke="${GOLD}" stroke-width="8"/>
         <path d="M0 882C128 848 225 906 348 948C483 995 641 1041 794 977" fill="none" stroke="${IVORY}" stroke-width="2" opacity=".88"/>
         <path d="M0 1060C141 1021 254 1095 395 1099C544 1102 675 1044 794 1057" fill="none" stroke="#0A655A" stroke-width="2" opacity=".9"/>
-        <path d="M0 0H794V1123H0Z" fill="url(#educational-cover-pattern)" opacity=".045"/>
+        <path d="M0 0H794V1123H0Z" fill="url(#educational-cover-pattern)" opacity=".05"/>
       </svg>
 
-      <img data-ministry-logo="true" src="/ministry-of-education-logo-white.svg" alt="وزارة التعليم" style="position:absolute;top:18px;right:42px;width:192px;height:149px;object-fit:contain;filter:brightness(0) saturate(100%) invert(22%) sepia(28%) saturate(1320%) hue-rotate(122deg) brightness(92%) contrast(96%)">
+      ${ministryLogo}
 
       <svg aria-hidden="true" viewBox="0 0 132 514" style="position:absolute;left:0;top:325px;width:132px;height:514px;pointer-events:none">
         <defs>
@@ -159,6 +323,8 @@ export function buildEducationalCover(input: EducationalCoverInput): string {
           </div>
         </div>
       </main>
+
+      ${saudiEmblem("#E5CF9E")}
 
       <svg aria-hidden="true" viewBox="0 0 370 160" style="position:absolute;right:34px;bottom:72px;width:420px;height:182px">
         <defs>

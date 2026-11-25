@@ -1,3 +1,4 @@
+import { PORTFOLIO_TEMPLATES, getPortfolioTheme, type PortfolioTemplateId } from "@/lib/portfolio-theme";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -74,8 +75,12 @@ function Portfolio() {
   const [cover, setCover] = useState<PortfolioCoverOptions>({
     layout: "royal",
     accent: "gold",
-    title: "ملف الإنجاز الوظيفي",
+    template: "ministerial" as PortfolioTemplateId,
+    title: "ملف شواهد الأداء الوظيفي",
   });
+  const [includeCv, setIncludeCv] = useState(true);
+  const [includeObjectives, setIncludeObjectives] = useState(true);
+  const selectedTheme = getPortfolioTheme(cover.template);
   const summary = computeManualProgress(standards, progress);
   const evidenceCoverage = computeEvidenceCoverage(standards, evidences);
 
@@ -96,21 +101,21 @@ function Portfolio() {
   const today = new Date();
   const hijri = today.toLocaleDateString("ar-SA-u-ca-islamic-umalqura", { day: "numeric", month: "long", year: "numeric" });
   const greg = today.toLocaleDateString("ar-SA-u-ca-gregory", { day: "numeric", month: "long", year: "numeric" });
+  const roleStandardIds = useMemo(() => new Set(standards.map((s) => s.id)), [standards]);
+  const roleEvidences = useMemo(() => evidences.filter((e) => roleStandardIds.has(e.standard_id)), [evidences, roleStandardIds]);
   const portfolioStandards = useMemo(() => {
-    const evidenceIds = new Set(evidences.map((e) => e.standard_id));
-    const activeIds = new Set(standards.map((s) => s.id));
-    return [...standards, ...allStandards.filter((s) => !activeIds.has(s.id) && evidenceIds.has(s.id))]
-      .filter((s) => showEmpty || evidenceIds.has(s.id));
-  }, [standards, allStandards, evidences, showEmpty]);
+    const evidenceIds = new Set(roleEvidences.map((e) => e.standard_id));
+    return standards.filter((s) => showEmpty || evidenceIds.has(s.id));
+  }, [standards, roleEvidences, showEmpty]);
   const visible = portfolioStandards;
   const hasPlaceholders = standards.some((s) => s.is_placeholder);
   const attachmentQuery = useQuery({
-    queryKey: ["portfolio-preview-attachments", user.id, evidences],
+    queryKey: ["portfolio-preview-attachments", user.id, roleEvidences],
     staleTime: 5 * 60_000,
     gcTime: 5 * 60_000,
     queryFn: async (): Promise<DownloadedEvidence[]> => {
       const result: DownloadedEvidence[] = [];
-      for (const evidence of [...evidences].sort(compareEvidenceChronological)) {
+      for (const evidence of [...roleEvidences].sort(compareEvidenceChronological)) {
         try {
           const { data, error } = await supabase.storage.from("evidence").download(evidence.file_path);
           if (error) throw error;
@@ -125,8 +130,10 @@ function Portfolio() {
   const previewInput = useMemo(() => ({
     profile, standards: portfolioStandards, summaryStandards: standards, progress,
     attachments: attachmentQuery.data ?? NO_ATTACHMENTS, generatedAt, evidenceLayout,
-    cover: { ...cover, title: cover.title.trim() || "ملف الإنجاز الوظيفي" },
-  }), [profile, portfolioStandards, standards, progress, attachmentQuery.data, generatedAt, evidenceLayout, cover]);
+    cover: { ...cover, title: cover.title.trim() || "ملف شواهد الأداء الوظيفي" },
+    includeCv,
+    includeObjectives,
+  }), [profile, portfolioStandards, standards, progress, attachmentQuery.data, generatedAt, evidenceLayout, cover, includeCv, includeObjectives]);
 
   async function exportPortfolio() {
     setExporting(true);
@@ -204,65 +211,82 @@ function Portfolio() {
         <EvidenceLayoutControls preferences={evidenceLayout} onChange={setEvidenceLayout} standards={portfolioStandards} disabled={exporting || preferencesLoaded !== preferenceKey} />
         {preferenceWarning && <p role="status" className="text-sm text-muted-foreground">{preferenceWarning}</p>}
         <PortfolioA4Preview input={previewInput} loading={attachmentQuery.isPending || preferencesLoaded !== preferenceKey} loadError={attachmentQuery.isError} />
-        <section className="rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6 print:hidden" aria-labelledby="cover-designer-title">
-          <div className="mb-4">
-            <p className="text-xs font-semibold text-primary">قبل التصدير</p>
-            <h2 id="cover-designer-title" className="mt-1 text-lg font-bold text-primary-deep">تصميم الغلاف</h2>
-            <p className="mt-1 text-sm text-muted-foreground">اختر تنسيقًا ولونًا، وستظهر النتيجة مباشرة في معاينة الغلاف.</p>
+        <section className="space-y-6 rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6 print:hidden" aria-labelledby="cover-designer-title">
+          <div>
+            <p className="text-xs font-semibold text-primary">قبل الطباعة والتصدير</p>
+            <h2 id="cover-designer-title" className="mt-1 text-lg font-bold text-primary-deep">قالب ملف الإنجاز وصفحاته</h2>
+            <p className="mt-1 text-sm text-muted-foreground">اختر القالب المناسب لهويتك؛ سيُطبّق فوراً على الغلاف وصفحات المعايير والشواهد في المعاينة والـ PDF.</p>
           </div>
-          <div className="grid gap-5 md:grid-cols-[1fr_1fr_1.2fr]">
-            <fieldset>
-              <legend className="mb-2 text-sm font-semibold">التنسيق</legend>
-              <div className="flex flex-wrap gap-2" role="group" aria-label="تنسيق الغلاف">
-                {([
-                  ["royal", "ملكي"],
-                  ["classic", "كلاسيكي"],
-                ] as const).map(([value, label]) => (
+
+          <fieldset>
+            <legend className="mb-3 text-sm font-semibold text-foreground">قالب الملف</legend>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="radiogroup" aria-label="اختيار قالب ملف الإنجاز">
+              {PORTFOLIO_TEMPLATES.map((tpl) => {
+                const active = (cover.template ?? "ministerial") === tpl.id;
+                return (
                   <button
-                    key={value}
+                    key={tpl.id}
                     type="button"
-                    aria-pressed={cover.layout === value}
-                    onClick={() => setCover((current) => ({ ...current, layout: value }))}
-                    className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                      cover.layout === value
-                        ? "border-primary bg-primary-soft text-primary-deep"
-                        : "border-border bg-background text-foreground hover:border-primary/50"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend className="mb-2 text-sm font-semibold">اللون المميّز</legend>
-              <div className="flex flex-wrap gap-2" role="group" aria-label="لون الغلاف">
-                {([
-                  ["gold", "ذهبي"],
-                  ["emerald", "زمردي"],
-                ] as const).map(([value, label]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    aria-pressed={cover.accent === value}
-                    onClick={() => setCover((current) => ({ ...current, accent: value }))}
-                    className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                      cover.accent === value
-                        ? "border-primary bg-primary-soft text-primary-deep"
-                        : "border-border bg-background text-foreground hover:border-primary/50"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => setCover((current) => ({ ...current, template: tpl.id }))}
+                    className={`relative flex items-center gap-3 rounded-2xl border p-3.5 text-right transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      active
+                        ? "border-primary bg-primary-soft/60 ring-1 ring-primary shadow-sm"
+                        : "border-border bg-background hover:border-primary/50"
                     }`}
                   >
                     <span
-                      className={`size-3 rounded-full border border-foreground/10 ${value === "gold" ? "bg-[#C5A15B]" : "bg-[#07594F]"}`}
                       aria-hidden="true"
+                      className="flex size-10 shrink-0 overflow-hidden rounded-full border border-black/10 shadow-inner"
+                      style={{ background: `linear-gradient(135deg, ${tpl.primary} 50%, ${tpl.accent} 50%)` }}
                     />
-                    {label}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-bold text-foreground">{tpl.name}</span>
+                      <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">{tpl.subtitle}</span>
+                    </span>
+                    {active && (
+                      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" className="size-3.5 fill-none stroke-current" strokeWidth="2.4">
+                          <path d="M3.5 8.5 6.5 11.5 12.5 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    )}
                   </button>
-                ))}
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <div className="grid gap-4 border-t border-border pt-5 md:grid-cols-3">
+            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-border bg-background p-3.5">
+              <div>
+                <div className="text-sm font-bold text-foreground">السيرة الذاتية</div>
+                <div className="text-xs text-muted-foreground">صفحة بياناتك المهنية ومؤهلاتك بعد الغلاف</div>
               </div>
-            </fieldset>
+              <input
+                type="checkbox"
+                checked={includeCv}
+                onChange={(e) => setIncludeCv(e.target.checked)}
+                className="size-5 accent-primary"
+              />
+            </label>
+
+            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-border bg-background p-3.5">
+              <div>
+                <div className="text-sm font-bold text-foreground">أهداف التعليم في المملكة</div>
+                <div className="text-xs text-muted-foreground">صفحة أهداف التعليم وفق رؤية 2030</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={includeObjectives}
+                onChange={(e) => setIncludeObjectives(e.target.checked)}
+                className="size-5 accent-primary"
+              />
+            </label>
+
             <div>
-              <Label htmlFor="cover-title" className="mb-2 block text-sm font-semibold">عنوان الغلاف</Label>
+              <Label htmlFor="cover-title" className="mb-2 block text-sm font-semibold">عنوان فرعي للغلاف (اختياري)</Label>
               <input
                 id="cover-title"
                 value={cover.title}
@@ -281,7 +305,7 @@ function Portfolio() {
           className={`relative mx-auto aspect-[210/297] w-full overflow-hidden border bg-card p-5 shadow-soft sm:p-10 print:min-h-[265mm] print:aspect-auto print:rounded-none print:border-0 print:shadow-none ${
             cover.layout === "royal" ? "rounded-[1.75rem]" : "rounded-lg"
           }`}
-          style={{ borderColor: cover.accent === "gold" ? "#C5A15B" : "#07594F" }}
+          style={{ borderColor: selectedTheme.accent, backgroundColor: selectedTheme.bg }}
         >
           <div className="absolute inset-0 opacity-40" aria-hidden="true">
             {cover.layout === "royal" && <div className="pattern-dots h-full w-full" />}
@@ -289,7 +313,7 @@ function Portfolio() {
           <div
             className="absolute inset-x-0 top-0 h-2"
             aria-hidden="true"
-            style={{ backgroundColor: cover.accent === "gold" ? "#C5A15B" : "#07594F" }}
+            style={{ backgroundColor: selectedTheme.primary }}
           />
           <div className="relative flex h-full flex-col">
             <div className="flex items-center gap-3">
@@ -303,7 +327,7 @@ function Portfolio() {
               </h2>
               <div
                 className={`mt-4 h-1 w-24 rounded-full ${cover.layout === "classic" ? "mx-auto" : ""}`}
-                style={{ backgroundColor: cover.accent === "gold" ? "#C5A15B" : "#07594F" }}
+                style={{ backgroundColor: selectedTheme.primary }}
               />
               <p className="mt-8 text-xl font-semibold sm:text-2xl">{profile?.full_name || "—"}</p>
             </div>

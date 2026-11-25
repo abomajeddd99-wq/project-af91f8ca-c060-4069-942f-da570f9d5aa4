@@ -7,6 +7,7 @@ import { buildStandardCover } from "./portfolio-standard-cover";
 import { buildRoyalClosing } from "./portfolio-royal-design";
 import { buildEducationalCover, buildEducationalCv } from "./portfolio-educational-design";
 import { buildEducationalObjectives } from "./portfolio-educational-objectives";
+import type { PortfolioTemplateId } from "./portfolio-theme";
 
 const PAGE_A4: [number, number] = [595.28, 841.89];
 const TOC_ROWS_PER_PAGE = 17;
@@ -69,6 +70,7 @@ export interface PortfolioCoverOptions {
   layout: "royal" | "classic";
   accent: "gold" | "emerald";
   title: string;
+  template?: PortfolioTemplateId;
 }
 
 interface PreparedPdfEvidence {
@@ -116,6 +118,8 @@ export interface PortfolioExportInput {
   progress: PortfolioExportProgress[];
   attachments: DownloadedEvidence[];
   cover?: Partial<PortfolioCoverOptions>;
+  includeCv?: boolean;
+  includeObjectives?: boolean;
   evidenceLayout?: EvidenceLayoutPreferences;
   generatedAt?: Date;
   onProgress?: (completed: number, total: number) => void;
@@ -311,7 +315,8 @@ function buildCover(
     ...(profile?.education_office ? { educationOffice: profile.education_office } : {}),
     ...(profile?.subject ? { subject: profile.subject } : {}),
     ...(profile?.job_title ? { jobTitle: profile.job_title } : {}),
-    subtitle: title === "ملف الإنجاز الوظيفي" ? "" : title,
+    subtitle: title === "ملف الإنجاز الوظيفي" || title === "ملف شواهد الأداء الوظيفي" ? "" : title,
+    template: cover.template ?? "ministerial",
     date: formatDate(generatedAt, "gregory"),
     layout: cover.layout === "classic" ? "classic" : "royal",
     accent: cover.accent === "emerald" ? "emerald" : "gold",
@@ -529,10 +534,13 @@ function evidenceMetadataPageCount(evidence: PreparedEvidence): number {
 }
 
 function buildImageCaption(section: ExportSection, file: PortfolioExportEvidence, description: string): string {
-  return `<div style="direction:rtl;text-align:right;border-top:1px solid #C5A15B;padding-top:8px;color:#202B2A">
-    <h2 style="margin:0;font-size:17px;line-height:1.7;font-weight:700;color:#07594F;overflow-wrap:anywhere">${escapeHtml(file.indicator_text || "شاهد غير مرتبط ببند محدد")}</h2>
-    ${description ? `<div style="margin-top:7px;font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(description)}</div>` : ""}
-    <div style="margin-top:4px;font-size:12px;line-height:1.8;color:#765F35;overflow-wrap:anywhere">المعيار ${escapeHtml(section.standard?.code || "—")} · ${escapeHtml(section.title)}</div>
+  return `<div style="direction:rtl;text-align:right;border:1px solid #D8C9AA;border-right:4px solid #C5A15B;border-radius:12px;background:#FFFFFF;padding:10px 14px;color:#202B2A">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+      <span style="display:inline-block;padding:2px 9px;border-radius:999px;background:#F0ECE2;color:#765F35;font-size:11px;font-weight:700">المعيار ${escapeHtml(section.standard?.code || "—")} · ${escapeHtml(section.title)}</span>
+      ${file.evidence_date ? `<span style="font-size:11px;color:#586A66">${escapeHtml(formatEvidenceDate(file.evidence_date))}</span>` : ""}
+    </div>
+    <h2 style="margin:0;font-size:16px;line-height:1.65;font-weight:700;color:#07594F;overflow-wrap:anywhere">${escapeHtml(file.indicator_text || file.title || "شاهد غير مرتبط ببند محدد")}</h2>
+    ${description ? `<div style="margin-top:5px;font-size:13.5px;line-height:1.75;color:#465956;white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(description)}</div>` : ""}
   </div>`;
 }
 
@@ -615,8 +623,9 @@ function buildPageMap(
   sections: ExportSection[],
   tocPageCount: number,
   teacherPageCount: number,
+  includeObjectives = true,
 ): { closingPage: number } {
-  let nextPage = 5 + teacherPageCount + tocPageCount;
+  let nextPage = (includeObjectives ? 5 : 4) + teacherPageCount + tocPageCount;
   for (const section of sections) {
     section.startPage = nextPage;
     nextPage++;
@@ -639,7 +648,7 @@ function buildPageMap(
 
 export type PortfolioPlannedPage =
   | { kind: "generated"; content: string; heading: string | undefined; frame: ExportPageFrame;
-      images: { evidence: PreparedImageEvidence; layout: EvidenceImageLayout }[] }
+      images: { evidence: PreparedImageEvidence; layout: EvidenceImageLayout }[]; template?: PortfolioTemplateId }
   | { kind: "original"; source: PDFDocument; bytes: Uint8Array; index: number; title: string };
 
 export interface PortfolioPlan {
@@ -692,14 +701,16 @@ export async function planPortfolioPages(input: PortfolioExportInput): Promise<P
     }
   }
   const tocPageCount = Math.max(1, Math.ceil(sections.length / TOC_ROWS_PER_PAGE));
-  const teacherPageCount = teacherInformationPageCount(input.profile);
-  const pageMap = buildPageMap(sections, tocPageCount, teacherPageCount);
+  const template: PortfolioTemplateId = input.cover?.template ?? "ministerial";
+  const teacherPageCount = input.includeCv === false ? 0 : teacherInformationPageCount(input.profile);
+  const includeObjectives = input.includeObjectives !== false;
+  const pageMap = buildPageMap(sections, tocPageCount, teacherPageCount, includeObjectives);
   const closingPage = pageMap.closingPage;
   const finalPageCount = closingPage;
 
   const pages: PortfolioPlannedPage[] = [];
   const generated = (content: string, heading: string | undefined, frame: ExportPageFrame) => {
-    pages.push({ kind: "generated", content, heading, frame, images: [] });
+    pages.push({ kind: "generated", content, heading, frame, images: [], template });
   };
 
   generated(buildCover(input.profile, generatedAt, input.cover), undefined, addPageFrame(1, finalPageCount));
@@ -712,9 +723,11 @@ export async function planPortfolioPages(input: PortfolioExportInput): Promise<P
   }
   const introductionPage = 2 + teacherPageCount;
   generated(buildIntroduction(), "مقدمة وأهداف الملف", addPageFrame(introductionPage, finalPageCount));
-  generated(buildEducationalObjectives(), "أهداف التعليم في المملكة", addPageFrame(introductionPage + 1, finalPageCount));
+  if (includeObjectives) {
+    generated(buildEducationalObjectives(), "أهداف التعليم في المملكة", addPageFrame(introductionPage + 1, finalPageCount));
+  }
   const summaryStandards = input.summaryStandards ?? input.standards;
-  const overviewPage = introductionPage + 2;
+  const overviewPage = introductionPage + (includeObjectives ? 2 : 1);
   generated(
       buildOverview(
         summaryStandards,
@@ -737,7 +750,7 @@ export async function planPortfolioPages(input: PortfolioExportInput): Promise<P
     for (const batch of evidenceBatches(section)) {
       if (batch.kind === "images") {
         pages.push({ kind: "generated", content: imagePageMarkup(batch.items), heading: undefined,
-          frame: addPageFrame(pageNumber++, finalPageCount), images: batch.items });
+          frame: addPageFrame(pageNumber++, finalPageCount), images: batch.items, template });
         for (const { evidence } of batch.items) {
           const chunks = evidence.pagePlan!.descriptionChunks;
           for (let index = 1; index < chunks.length; index++) {
@@ -819,7 +832,7 @@ export async function createPortfolioPdf(input: PortfolioExportInput): Promise<P
       const copied = await documentPdf.copyPages(page.source, indices);
       for (const original of copied) documentPdf.addPage(original);
     } else {
-      await addRasterPage(documentPdf, await renderPortfolioPage(page.content, page.heading, page.frame));
+      await addRasterPage(documentPdf, await renderPortfolioPage(page.content, page.heading, page.frame, page.template));
       await embedEvidenceImages(documentPdf, page.images);
     }
     input.onPageProgress?.(index + 1, plan.pages.length);

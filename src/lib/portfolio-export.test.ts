@@ -555,7 +555,7 @@ describe("complete portfolio PDF export", () => {
 
     const firstSectionPages = pages.slice(firstCoverIndex, secondCoverIndex);
     expect(firstSectionPages[0]).toMatchObject({ kind: "generated" });
-    expect(firstSectionPages[0]!.kind === "generated" && firstSectionPages[0].content).toContain("المعيار الأول المستقل");
+    expect(firstSectionPages[0]!.kind === "generated" && firstSectionPages[0]!.content).toContain("المعيار الأول المستقل");
     expect(firstSectionPages.filter((page) => page.kind === "original")).toHaveLength(0);
     expect(firstSectionPages.some((page) =>
       page.kind === "generated" && page.content.includes("المعيار الثاني المستقل"),
@@ -569,7 +569,7 @@ describe("complete portfolio PDF export", () => {
 
     const secondSectionPages = pages.slice(secondCoverIndex);
     expect(secondSectionPages[0]!.kind === "generated");
-    expect(secondSectionPages[0]!.kind === "generated" && secondSectionPages[0].content).toContain("المعيار الثاني المستقل");
+    expect(secondSectionPages[0]!.kind === "generated" && secondSectionPages[0]!.content).toContain("المعيار الثاني المستقل");
     expect(secondSectionPages.some((page) =>
       page.kind === "generated" && page.content.includes("المعيار الأول المستقل"),
     )).toBe(false);

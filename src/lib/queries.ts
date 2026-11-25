@@ -12,15 +12,33 @@ export const standardsQuery = () =>
   queryOptions({
     queryKey: ["standards", "active"],
     queryFn: async (): Promise<Standard[]> => {
+      const { data: authData } = await supabase.auth.getUser();
+      let roleId: string | null = null;
+      if (authData?.user) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("professional_role_id")
+          .eq("id", authData.user.id)
+          .maybeSingle();
+        roleId = prof?.professional_role_id ?? null;
+      }
+
       const { data, error } = await supabase
         .from("standards")
         .select("*")
         .eq("is_active", true)
         .order("sort_order", { ascending: true });
       if (error) throw error;
-      const { data: versions, error: versionError } = await supabase.from("criteria_versions").select("id,status");
+
+      let vQuery = supabase.from("criteria_versions").select("id,status,professional_role_id,is_official");
+      if (roleId) {
+        vQuery = vQuery.eq("professional_role_id", roleId);
+      }
+      const { data: versions, error: versionError } = await vQuery;
       if (versionError) throw versionError;
-      return assignedStandards(data, versions);
+
+      const validVersions = versions.filter((v) => v.status === "published" || v.is_official);
+      return assignedStandards(data, validVersions.map((v) => ({ id: v.id, status: "published" })));
     },
   });
 

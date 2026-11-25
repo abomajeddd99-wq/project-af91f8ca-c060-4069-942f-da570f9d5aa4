@@ -197,17 +197,17 @@ function AdminPanel() {
                   <th className="p-3">الاسم</th>
                   <th className="p-3">البريد</th>
                   <th className="p-3">المسار</th>
+                  <th className="p-3">إجراء</th>
                 </tr>
               </thead>
               <tbody>
                 {accounts.map((a) => (
-                  <tr key={a.id} className="border-t border-border">
-                    <td className="p-3">{a.full_name}</td>
-                    <td className="p-3" dir="ltr">
-                      {a.email}
-                    </td>
-                    <td className="p-3">{a.career_path || "لم يُحدد"}</td>
-                  </tr>
+                  <AdminUserRow
+                    key={`${a.id}-${a.career_path ?? ""}-${a.full_name ?? ""}`}
+                    account={a}
+                    roles={roles}
+                    onSaved={() => qc.invalidateQueries()}
+                  />
                 ))}
               </tbody>
             </table>
@@ -404,5 +404,82 @@ function AdminPanel() {
         </>
       )}
     </div>
+  );
+}
+
+
+function AdminUserRow({
+  account,
+  roles,
+  onSaved,
+}: {
+  account: { id: string; full_name: string | null; email: string | null; career_path: string | null };
+  roles: { id: string; title: string; is_active: boolean }[];
+  onSaved: () => Promise<void>;
+}) {
+  const initialRoleId = roles.find((r) => r.title === account.career_path)?.id ?? "";
+  const [fullName, setFullName] = useState(account.full_name ?? "");
+  const [roleId, setRoleId] = useState(initialRoleId);
+  const [busy, setBusy] = useState(false);
+
+  async function updateAccount() {
+    if (!roleId) {
+      toast.error("اختر المسار الوظيفي.");
+      return;
+    }
+    if (fullName.trim().length < 3) {
+      toast.error("يرجى كتابة الاسم الكامل.");
+      return;
+    }
+    setBusy(true);
+    const { error } = await (supabase as any).rpc("admin_update_user_account", {
+      p_user_id: account.id,
+      p_role_id: roleId,
+      p_full_name: fullName.trim(),
+    });
+    setBusy(false);
+    if (error) {
+      toast.error(error.message || "تعذر تحديث بيانات المستخدم.");
+      return;
+    }
+    await onSaved();
+    toast.success("تم تحديث بيانات المستخدم بنجاح.");
+  }
+
+  return (
+    <tr className="border-t border-border">
+      <td className="p-3">
+        <Input
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          maxLength={200}
+          className="min-w-[160px]"
+        />
+      </td>
+      <td className="p-3" dir="ltr">
+        {account.email}
+      </td>
+      <td className="p-3">
+        <Select value={roleId} onValueChange={setRoleId}>
+          <SelectTrigger className="min-w-[200px]">
+            <SelectValue placeholder="اختر المسار" />
+          </SelectTrigger>
+          <SelectContent>
+            {roles
+              .filter((r) => r.is_active)
+              .map((r) => (
+                <SelectItem key={r.id} value={r.id}>
+                  {r.title}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </td>
+      <td className="p-3">
+        <Button type="button" size="sm" onClick={updateAccount} disabled={busy}>
+          {busy ? "جارٍ الحفظ…" : "حفظ"}
+        </Button>
+      </td>
+    </tr>
   );
 }
