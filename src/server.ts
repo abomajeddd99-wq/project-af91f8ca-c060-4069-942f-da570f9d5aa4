@@ -47,8 +47,19 @@ function isH3SwallowedErrorBody(body: string): boolean {
 // Hosting compresses every response at the edge. Never compress a body (gzip, brotli,
 // CompressionStream) or set content-encoding here or in a server route: the body gets encoded
 // twice and renders garbled.
+function syncCloudflareEnvToProcess(env: unknown): void {
+  if (!env || typeof env !== "object" || typeof process === "undefined") return;
+  process.env ??= {};
+  for (const [key, value] of Object.entries(env as Record<string, unknown>)) {
+    if (typeof value === "string" && !process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+      syncCloudflareEnvToProcess(env);
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
